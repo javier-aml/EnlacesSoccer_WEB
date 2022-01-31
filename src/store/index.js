@@ -29,12 +29,12 @@ const mutations = {
 
 const actions = {
   getPaises({ commit }) {
-    return axios.get('http://localhost:3000/ConsultarPaises?nActivo=1',{},{'Access-Control-Allow-Origin': '*'})
+    return axios.get('https://enlacessoccer.azurewebsites.net/ConsultarPaises?nActivo=1',{},{'Access-Control-Allow-Origin': '*'})
     .then(response => commit('SET_PAISES', response.data))
     .catch(error => console.log(error))
   },
   getEstados({ commit }) {
-    return axios.get('http://localhost:3000/ConsultarEstados?nActivo=1',{},{'Access-Control-Allow-Origin': '*'})
+    return axios.get('https://enlacessoccer.azurewebsites.net/ConsultarEstados?nActivo=1',{},{'Access-Control-Allow-Origin': '*'})
     .then(response => commit('SET_ESTADOS', response.data))
     .catch(error => console.log(error))
   }
