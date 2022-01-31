@@ -84,11 +84,7 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes,
-  navigationFallback: {
-    rewrite: "/index.html",
-    exclude: ["/images/*.{png,jpg,gif}", "/css/*"]
-  }
+  routes
 })
 
 export default router
