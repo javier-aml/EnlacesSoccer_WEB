@@ -224,8 +224,8 @@
         this.esGuardado = data === 1 ? true : false;
       },
       confirmaGuardar(){
+        this.$refs.forma.reset();
         this.esGuardado = false;
-        this.$refs.form.reset();
       }
     },
     async mounted() {
