@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 const state = {
   paises: [],
-  estados: []
+  estados: [],
+  municipios: []
 }
 
 const getters = {
@@ -15,6 +16,9 @@ const getters = {
   },
   items: estados => {
     return estados.Nombre;
+  },
+  items: municipios => {
+    return municipios.Nombre;
   }
 }
 
@@ -24,19 +28,66 @@ const mutations = {
   },
   SET_ESTADOS(state, items) {
     state.estados = items
+  },
+  SET_MUNICIPIOS(state, items) {
+    state.municipios = items
   }
 }
 
 const actions = {
-  getPaises({ commit }) {
-    return axios.get('https://enlacessoccer.azurewebsites.net/ConsultarPaises?nActivo=1',{},{'Access-Control-Allow-Origin': '*'})
-    .then(response => commit('SET_PAISES', response.data))
-    .catch(error => console.log(error))
+  async getPaises({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarPaises?nActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_PAISES', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
   },
-  getEstados({ commit }) {
-    return axios.get('https://enlacessoccer.azurewebsites.net/ConsultarEstados?nActivo=1',{},{'Access-Control-Allow-Origin': '*'})
-    .then(response => commit('SET_ESTADOS', response.data))
-    .catch(error => console.log(error))
+  async getEstados({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarEstados?nActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_ESTADOS', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+  async getMunicipios({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarMunicipios?nActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_MUNICIPIOS', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+  async postGuardaLiga({commit}, payload) {
+    try {
+      const url = process.env.VUE_APP_API_URL + '/GuardarLiga';
+      const data = {
+        data: {
+          sNombre: payload.Nombre,
+          sRepresentante: payload.Representante,
+          nTelefono: payload.Telefono,
+          sCorreo: payload.Correo,
+          nIdPais: payload.idPais,
+          nIdEstado: payload.idEstado,
+          nIdMunicipio: payload.idMunicipio,
+          nActivo: 1,
+          dFechaUltimaMod: '2022-01-26 13:43:00',
+          sNombrePcMod: 'TEST',
+          nClaUsuarioMod: 1
+        }
+      };
+      console.log(data);
+      const config = {
+        headers: {
+          'content-type': 'application/json; charset=utf-8'
+        }
+      };
+      await axios.post(url, data, config);
+      return 1;
+    } catch (error) {
+      return console.log(error);
+    }
   }
 }
 
