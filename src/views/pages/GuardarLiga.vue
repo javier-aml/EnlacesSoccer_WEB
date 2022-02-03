@@ -6,7 +6,11 @@
        v-show="!esGuardado"
     >
       <v-card-text>
-        <v-form class="multi-col-validation mt-6">
+        <v-form 
+          ref="forma"
+          v-model="valid"
+          class="multi-col-validation mt-6"
+        >
           <v-row>
             <v-col
               md="6"
@@ -161,6 +165,7 @@
   export default {
     data() {
       return{
+          habilitaGuardar: false,
           esGuardado: false,
           valMsg: 'Este campo es requerido',
           Nombre: null,
@@ -220,13 +225,7 @@
       },
       confirmaGuardar(){
         this.esGuardado = false;
-          this.Nombre = null;
-          this.Representante = null;
-          this.Telefono = null;
-          this.Correo = null;
-          this.idPais = null;
-          this.idEstado = null;
-          this.idMunicipio = null;
+        this.$refs.form.reset();
       }
     },
     async mounted() {
