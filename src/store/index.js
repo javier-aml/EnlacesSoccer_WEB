@@ -7,7 +7,8 @@ Vue.use(Vuex)
 const state = {
   paises: [],
   estados: [],
-  municipios: []
+  municipios: [],
+  ligas: []
 }
 
 const getters = {
@@ -19,6 +20,9 @@ const getters = {
   },
   items: municipios => {
     return municipios.Nombre;
+  },
+  items: ligas => {
+    return ligas.Nombre;
   }
 }
 
@@ -31,6 +35,9 @@ const mutations = {
   },
   SET_MUNICIPIOS(state, items) {
     state.municipios = items
+  },
+  SET_LIGAS(state, items) {
+    state.ligas = items
   }
 }
 
@@ -59,6 +66,14 @@ const actions = {
       return console.log(error);
     }
   },
+  async getLigas({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarLigas?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_LIGAS', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
+  },
   async postGuardaLiga({commit}, payload) {
     try {
       const url = process.env.VUE_APP_API_URL + '/GuardarLiga';
@@ -75,6 +90,30 @@ const actions = {
           dFechaUltimaMod: '2022-01-26 13:43:00',
           sNombrePcMod: 'TEST',
           nClaUsuarioMod: 1
+        }
+      };
+      console.log(data);
+      const config = {
+        headers: {
+          'content-type': 'application/json; charset=utf-8'
+        }
+      };
+      await axios.post(url, data, config);
+      return 1;
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+  async postGuardarEquipo({commit}, payload) {
+    try {
+      const url = process.env.VUE_APP_API_URL + '/GuardarEquipo';
+      const data = {
+        data: {
+          pnIdLiga: payload.Idliga,
+          psNombre: payload.Nombre,
+          pnActivo: 1,          
+          psNombrePcMod: 'TEST_Artur',
+          pnClaUsuarioMod: 1
         }
       };
       console.log(data);

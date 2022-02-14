@@ -201,7 +201,7 @@
         const data = this.$store.state.municipios;
         const dataArr = [];
         for(let item of data){
-          if(item.IdEstado === this.idEstado) dataArr.push(item);
+          if(item.IdPais === this.idPais && item.IdEstado === this.idEstado) dataArr.push(item);
         }
         return dataArr;
       },
