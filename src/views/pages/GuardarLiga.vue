@@ -8,7 +8,6 @@
       <v-card-text>
         <v-form 
           ref="forma"
-          v-model="valid"
           class="multi-col-validation mt-6"
         >
           <v-row>
@@ -165,7 +164,6 @@
   export default {
     data() {
       return{
-          habilitaGuardar: false,
           esGuardado: false,
           valMsg: 'Este campo es requerido',
           Nombre: null,

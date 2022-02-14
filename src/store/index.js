@@ -44,7 +44,7 @@ const mutations = {
 const actions = {
   async getPaises({commit}) {
     try {
-      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarPaises?nActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarPaises?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_PAISES', response.data);
     } catch (error) {
       return console.log(error);
@@ -52,7 +52,7 @@ const actions = {
   },
   async getEstados({commit}) {
     try {
-      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarEstados?nActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarEstados?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_ESTADOS', response.data);
     } catch (error) {
       return console.log(error);
@@ -60,7 +60,7 @@ const actions = {
   },
   async getMunicipios({commit}) {
     try {
-      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarMunicipios?nActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarMunicipios?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_MUNICIPIOS', response.data);
     } catch (error) {
       return console.log(error);
