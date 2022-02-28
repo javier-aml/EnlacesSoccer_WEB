@@ -84,6 +84,14 @@ const routes = [
     },
   },
   {
+    path: '/pages/grid2',
+    name: 'grid',
+    component: () => import('@/views/pages/Grid2.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/Error.vue'),
