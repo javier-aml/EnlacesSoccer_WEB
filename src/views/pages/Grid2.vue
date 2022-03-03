@@ -17,17 +17,28 @@
                 >
                     <v-checkbox
                         @change="onChangeCell($event, item.id, cell)"
-                        v-if="cell === 'eliminar'"
+                        v-if="dataType(cell) === 'delete'"
+                    ></v-checkbox>
+                    <v-checkbox
+                        @change="onChangeCell($event, item.id, cell)"
+                        v-else-if="dataType(cell) === 'check'"
                     ></v-checkbox>
                     <v-text-field
                         @change="onChangeCell($event, item.id, cell)"
                         :value="item[cell]"
-                        v-else-if="item.edit.includes(cell)"
+                        v-else-if="edited(item,cell) && dataType(cell) === 'text'"
                         dense single-line
                     >
                     </v-text-field>
+                    <v-select
+                        @change="onChangeCell($event, item.id, cell)"
+                        v-else-if="edited(item,cell) && dataType(cell) === 'combo'"
+                        :items="combos[cell]"
+                        item-text="Nom"
+                        item-value="Id"
+                    ></v-select>
                     <span
-                        v-else 
+                        v-else
                         @click="onEditRow($event, item.id, cell)"
                     >
                         {{item[cell]}}
@@ -41,22 +52,29 @@
     export default{
         data: () => ({
             headers: [
-                {text: 'Nombre', value: 'nombre', sortable: true, width: '150px'},
-                {text: 'Apellido', value: 'apellido', sortable: true, width: '150px'},
-                {text: 'Telefono', value: 'telefono', sortable: false, width: '150px'},
-                {text: 'Eliminar', value: 'eliminar', sortable: false, width: '150px'}
+                {text: 'Nombre', value: 'nombre', sortable: true, width: '150px', type: 'text'},
+                {text: 'Apellido', value: 'apellido', sortable: true, width: '150px', type: 'text'},
+                {text: 'Telefono', value: 'telefono', sortable: false, width: '150px', type: 'text'},
+                {text: 'Pais', value: 'pais', sortable: true, width: '150px', type: 'combo'},
+                {text: 'Valido', value: 'valido', sortable: false, width: '150px', type: 'check'},
+                {text: 'Eliminar', value: 'eliminar', sortable: false, width: '150px', type: 'delete'}
             ],
             items: [
-                {id: 1, nombre: 'Javier', apellido: 'Arredondo', telefono: 4612347082, eliminar: false, edit: []},
-                {id: 2, nombre: 'Diego', apellido: 'Arredondo', telefono: 6121184026, eliminar: false, edit: []}
+                {id: 1, nombre: 'Javier', apellido: 'Arredondo', telefono: 4612347082, pais: 'Mexico', valido: false, eliminar: false, edit: []},
+                {id: 2, nombre: 'Diego', apellido: 'Arredondo', telefono: 6121184026, pais: 'EUA', valido: false, eliminar: false, edit: []}
             ],
+            combos: {
+                pais: [
+                    {Id: 1, Nom: 'Mexico'},
+                    {Id: 2, Nom: 'EUA'},
+                ]},
             search: '',
             itemsEdit: []
         }),
         methods: {
             onChangeCell(val, rowId, cell){
                 const index = this.itemsEdit.findIndex(item => item.id === rowId);
-                if(!index) this.itemsEdit[index][cell] = val;
+                if(index !== -1) this.itemsEdit[index][cell] = val;
                 else{
                     const row = this.items.find(item => item.id === rowId);
                     row[cell] = val;
@@ -71,6 +89,13 @@
             colWidth(cell){
                 const index = this.headers.findIndex(item => item.value === cell);
                 return this.headers[index] ? this.headers[index].width : '';
+            },
+            dataType(cell){
+                const index = this.headers.findIndex(item => item.value === cell);
+                return this.headers[index] ? this.headers[index].type : '';
+            },
+            edited(item, cell){
+                return item.edit.includes(cell);
             }
         }
     }
