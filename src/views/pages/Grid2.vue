@@ -3,7 +3,7 @@
         :items="isFiltered ? itemsFilter : items" 
         :search="search" 
         class="elevation-1" 
-        height="350px"
+        height="450px"
         :mobile-breakpoint='NaN'
     >
         <template #header :headers="headers">
@@ -51,8 +51,8 @@
                     <th>
                         Filtros
                         <v-btn 
-                            icon v-bind="attrs" 
-                            v-on="on"
+                            icon
+                            @click.prevent="mobileFilterToggle"
                         >
                             <v-icon small>mdi-filter</v-icon>
                         </v-btn>
@@ -61,6 +61,40 @@
             </thead>
         </template>
         <template #item="{item}">
+            <transition name="fade">
+                <tr v-if="isMobile() && item.id <= 1 && mobileFilter">
+                    <td
+                        class="v-data-table__mobile-row"
+                        v-for="header in headers" 
+                        :key="header.id"
+                        style="background: #dcdcdc"
+                    >
+                        <div class="v-data-table__mobile-row__header">
+                            {{header.text}}
+                        </div>
+                        <div class="v-data-table__mobile-row__cell" style="float:rigth">
+                            <v-checkbox
+                                v-if="header.type === 'check'"
+                                style="max-width: 150px"
+                            ></v-checkbox>
+                            <v-text-field
+                                v-else-if="header.type === 'text'"
+                                dense single-line
+                                style="max-width: 150px"
+                            >
+                            </v-text-field>
+                            <v-select
+                                v-else-if="header.type === 'combo'"
+                                :items="combos[header.value]"
+                                :value="1"
+                                item-text="Nom"
+                                item-value="Id"
+                                style="max-width: 150px"
+                            ></v-select>
+                        </div>
+                    </td>                
+                </tr>
+            </transition>
             <tr v-if="!isMobile()">
                 <td 
                     v-for="cell in Object.keys(item)" 
@@ -86,7 +120,7 @@
                     <v-select
                         @change="onChangeCell($event, item.id, cell)"
                         v-else-if="edited(item,cell) && dataType(cell) === 'combo'"
-                        :items="combos[cell]"
+                        :items="combos[header.value]"
                         :value="1"
                         item-text="Nom"
                         item-value="Id"
@@ -171,7 +205,8 @@
                     {Id: 2, Nom: 'EUA'},
                 ]},
             search: '',
-            itemsEdit: []
+            itemsEdit: [],
+            mobileFilter: false
         }),
         methods: {
             onChangeCell(val, rowId, cell){
@@ -216,6 +251,9 @@
             },
             isMobile(){
                 return window.innerWidth < 600 ? true : false;
+            },
+            mobileFilterToggle(){
+                this.mobileFilter = !this.mobileFilter
             }
         },
         computed: {
@@ -229,4 +267,10 @@
     td[cell-name="id"], td[cell-name="edit"]{
         display: none;
     }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to{
+        opacity: 0;
+    }      
 </style>
