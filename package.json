@@ -37,6 +37,7 @@
     "apexcharts": "^3.27.3",
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
+    "v-mask": "^2.3.0",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.6.2",
     "vue-router": "^3.2.0",

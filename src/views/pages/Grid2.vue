@@ -4,7 +4,7 @@
         :search="search" 
         class="elevation-1" 
         height="450px"
-        :mobile-breakpoint='NaN'
+        :mobile-breakpoint='null'
     >
         <template #header :headers="headers">
             <thead v-if="!isMobile()">
@@ -27,12 +27,52 @@
                                 </template>
                                 <div style="background-color: white; width: 280px">
                                     <v-text-field
+                                        v-if="header.type === 'text'"
                                         class="pa-4"
-                                        :label="`Filtrar por ${header.text} :`"
+                                        :label="`${header.text} :`"
                                         :autofocus="true"
                                         :value="header.filter"
                                         @change="onFilter($event, header.value)"
                                     ></v-text-field>
+                                    <span
+                                        v-if="header.type === 'date'"
+                                    >
+                                        <v-text-field
+                                            class="pa-4"
+                                            :label="`De :`"
+                                            :autofocus="true"
+                                            :value="header.filter"
+                                            type="date"
+                                            @change="onFilter($event, header.value)"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            class="pa-4"
+                                            :label="`A :`"
+                                            :autofocus="true"
+                                            :value="header.filter"
+                                            type="date"
+                                            @change="onFilter($event, header.value)"
+                                        ></v-text-field>
+                                    </span>
+                                    <v-select
+                                        v-else-if="header.type === 'combo'"
+                                        :items="combos[header.value]"
+                                        :value="header.filter"
+                                        item-text="Nom"
+                                        item-value="Id"
+                                        style="max-width: 150px"
+                                        class="pa-4"
+                                        :label="`${header.text} :`"
+                                        :autofocus="true"
+                                        @change="onFilter($event, header.value)"
+                                    ></v-select>
+                                    <v-checkbox
+                                        v-else-if="header.type === 'check'"
+                                        class="pa-4"
+                                        :label="`${header.text}`"
+                                        :autofocus="true"
+                                        @change="onFilter($event, header.value)"
+                                    ></v-checkbox>                                   
                                     <v-btn
                                         small
                                         text
@@ -61,7 +101,10 @@
             </thead>
         </template>
         <template #item="{item}">
-            <transition name="fade">
+            <transition 
+                appear
+                name="fade"
+            >
                 <tr v-if="isMobile() && item.id <= 1 && mobileFilter">
                     <td
                         class="v-data-table__mobile-row"
@@ -117,11 +160,35 @@
                         dense single-line
                     >
                     </v-text-field>
+                    <v-text-field-simplemask
+                        :value="item[cell]"
+                        :ref="cell"
+                        v-else-if="edited(item,cell) && dataType(cell) === 'telephone'"
+                        dense single-line
+                        @input="onChangeCell($event, item.id, cell)"
+                        :options="{
+                            inputMask: '(###) #######',
+                            outputMask: '##########',
+                            empty: null,
+                            applyAfter: false,
+                            alphanumeric: false,
+                            lowerCase: false,
+                        }"
+                    >
+                    </v-text-field-simplemask>
+                    <v-text-field
+                        @change="onChangeCell($event, item.id, cell)"
+                        :value="item[cell]"
+                        type="date"
+                        v-else-if="edited(item,cell) && dataType(cell) === 'date'"
+                        dense single-line
+                    >
+                    </v-text-field>
                     <v-select
                         @change="onChangeCell($event, item.id, cell)"
                         v-else-if="edited(item,cell) && dataType(cell) === 'combo'"
-                        :items="combos[header.value]"
-                        :value="1"
+                        :items="combos[cell]"
+                        :value="item[cell]"
                         item-text="Nom"
                         item-value="Id"
                     ></v-select>
@@ -129,7 +196,7 @@
                         v-else
                         @click="onEditRow($event, item.id, cell)"
                     >
-                        {{item[cell]}}
+                        {{cellData(cell, item[cell], dataType(cell))}}
                     </span>
                 </td>
             </tr>
@@ -160,11 +227,20 @@
                             style="max-width: 150px"
                         >
                         </v-text-field>
+                        <v-text-field
+                            @change="onChangeCell($event, item.id, cell)"
+                            :value="item[cell]"
+                            v-else-if="edited(item,cell) && dataType(cell) === 'date'"
+                            dense single-line
+                            type="date"
+                            style="max-width: 150px"
+                        >
+                        </v-text-field>
                         <v-select
                             @change="onChangeCell($event, item.id, cell)"
                             v-else-if="edited(item,cell) && dataType(cell) === 'combo'"
                             :items="combos[cell]"
-                            :value="1"
+                            :value="item[cell]"
                             item-text="Nom"
                             item-value="Id"
                             style="max-width: 150px"
@@ -174,7 +250,7 @@
                             @click="onEditRow($event, item.id, cell)"
                             style="max-width: 150px"
                         >
-                            {{item[cell]}}
+                            {{cellData(cell, item[cell], dataType(cell))}}
                         </span>
                     </div>
                 </td>
@@ -187,16 +263,16 @@
     export default{
         data: () => ({
             headers: [
-                {text: 'Nombre', value: 'nombre', sortable: true, width: '150px', type: 'text', filter: ''},
-                {text: 'Apellido', value: 'apellido', sortable: true, width: '150px', type: 'text', filter: ''},
-                {text: 'Telefono', value: 'telefono', sortable: false, width: '150px', type: 'text', filter: ''},
-                {text: 'Pais', value: 'pais', sortable: true, width: '150px', type: 'combo', filter: ''},
-                {text: 'Valido', value: 'valido', sortable: false, width: '150px', type: 'check', filter: ''},
-                {text: 'Eliminar', value: 'eliminar', sortable: false, width: '150px', type: 'delete', filter: ''}
+                {text: 'Nombre', value: 'nombre', sortable: true, width: '150px', type: 'text', filter: null},
+                {text: 'Telefono', value: 'telefono', sortable: false, width: '150px', type: 'telephone', filter: null},
+                {text: 'Fecha', value: 'fecha', sortable: false, width: '150px', type: 'date', filter: null},
+                {text: 'Pais', value: 'pais', sortable: true, width: '150px', type: 'combo', filter: null},
+                {text: 'Valido', value: 'valido', sortable: false, width: '150px', type: 'check', filter: null},
+                {text: 'Eliminar', value: 'eliminar', sortable: false, width: '150px', type: 'delete', filter: null}
             ],
             items: [
-                {id: 1, nombre: 'Javier', apellido: 'Arredondo', telefono: 4612347082, pais: 'Mexico', valido: false, eliminar: false, edit: []},
-                {id: 2, nombre: 'Diego', apellido: 'Arredondo', telefono: 6121184026, pais: 'EUA', valido: false, eliminar: false, edit: []}
+                {id: 1, nombre: 'Javier', telefono: 4612347082, fecha: '2022-03-21', pais: 1, valido: false, eliminar: false, edit: []},
+                {id: 2, nombre: 'Diego', telefono: 6121184026, fecha: '2022-03-21', pais: 2, valido: false, eliminar: false, edit: []}
             ],
             itemsFilter: [],
             combos: {
@@ -210,6 +286,7 @@
         }),
         methods: {
             onChangeCell(val, rowId, cell){
+                if(!val) return;
                 const index = this.itemsEdit.findIndex(item => item.id === rowId);
                 if(index !== -1) this.itemsEdit[index][cell] = val;
                 else{
@@ -217,7 +294,7 @@
                     row[cell] = val;
                     this.itemsEdit.push(row);
                 }
-                console.log(this.itemsEdit);
+                console.log(val);
             },
             onEditRow(event, rowId, cell){
                 const index = this.items.findIndex(item => item.id === rowId);
@@ -241,8 +318,12 @@
             onFilter(val, col){
                 const index = this.headers.findIndex(item => item.value === col);
                 this.headers[index].filter = val;
-                this.itemsFilter = [];
-                this.itemsFilter = this.items.filter(item => item[col].includes(val));
+                const dataType = this.headers[index].type;
+                if(dataType === 'combo'){
+                    this.itemsFilter = this.items.filter(item => item[col] === val);
+                }else{
+                    this.itemsFilter = this.items.filter(item => item[col].includes(val));
+                }
             },
             clearFilter(val, col){
                 const index = this.headers.findIndex(item => item.value === col);
@@ -254,6 +335,16 @@
             },
             mobileFilterToggle(){
                 this.mobileFilter = !this.mobileFilter
+            },
+            cellData(cell, value, dataType){
+                if(dataType === 'combo'){
+                    return this.combos[cell][this.combos[cell].findIndex(item => item.Id === value)].Nom;
+                }else if(dataType === 'telephone'){
+                    return '(' + (value + '').substring(0,3) + ') ' + (value + '').substring(3,value.length);
+                }
+                else{
+                    return value;
+                }
             }
         },
         computed: {
