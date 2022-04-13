@@ -262,7 +262,7 @@
                         v-else-if="dataType(cell) === 'check'"
                     ></v-checkbox>
                     <v-text-field
-                        @change="onChangeCell($event, item.id, cell)"
+                        @input="onChangeCell($event, item.id, cell)"
                         :value="item[cell]"
                         v-else-if="edited(item,cell) && dataType(cell) === 'text'"
                         dense single-line
@@ -543,6 +543,10 @@
             },
             isValid(type, val){
                 if(type === 'telephone' && val.length < this.telephoneFieldLen) return true;
+                else if(type === 'email'){
+                    const email = (val + '').toLowerCase();
+                    return !email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+                }
                 else if(!val) return true;
                 else return false;
             }
