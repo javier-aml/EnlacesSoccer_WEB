@@ -22,7 +22,7 @@
                                         v-on="on"
                                         v-if="header.value !== 'eliminar'"
                                     >
-                                        <v-icon small :disabled="header.filter ? false : true">mdi-filter</v-icon>
+                                        <v-icon small :disabled="isFilteredIcon(header.filter) ? false : true">mdi-filter</v-icon>
                                     </v-btn>
                                 </template>
                                 <div style="background-color: white; width: 280px">
@@ -266,9 +266,11 @@
                         :value="item[cell]"
                         v-else-if="edited(item,cell) && dataType(cell) === 'text'"
                         dense single-line
+                        :maxlength="textFieldMaxLen"
+                        :error="isValid(dataType(cell), item[cell])"
                     >
                     </v-text-field>
-                    <v-text-field-simplemask
+                    <simple-mask
                         :value="item[cell]"
                         :ref="cell"
                         v-else-if="edited(item,cell) && dataType(cell) === 'telephone'"
@@ -281,15 +283,17 @@
                             applyAfter: false,
                             alphanumeric: false,
                             lowerCase: false,
+                            error: isValid(dataType(cell), item[cell])
                         }"
                     >
-                    </v-text-field-simplemask>
+                    </simple-mask>
                     <v-text-field
-                        @change="onChangeCell($event, item.id, cell)"
+                        @input="onChangeCell($event, item.id, cell)"
                         :value="item[cell]"
                         v-else-if="edited(item,cell) && dataType(cell) === 'email'"
                         dense single-line
-                        style="max-width: 150px"
+                        :maxlength="emailFieldMaxLen"
+                        :error="isValid(dataType(cell), item[cell])"
                     >
                     </v-text-field>
                     <v-menu
@@ -303,11 +307,13 @@
                                 :value="item[cell]"
                                 readonly
                                 v-on="on"
+                                :error="isValid(dataType(cell), item[cell])"
                             >
                             </v-text-field>
                         </template>
                         <v-date-picker
                             locale="es-mx"
+                            no-title
                             :value="item[cell]"
                             @change="onChangeCell($event, item.id, cell)"
                         >
@@ -320,6 +326,7 @@
                         :value="item[cell]"
                         item-text="Nom"
                         item-value="Id"
+                        :error="isValid(dataType(cell), item[cell])"
                     ></v-select>
                     <span
                         v-else
@@ -413,7 +420,11 @@
     </v-data-table>
 </template>
 <script>
+    import SimpleMask from '../../components/SimpleMask.vue'
     export default{
+        components: {
+            SimpleMask
+        },
         data: () => ({
             headers: [
                 {text: 'Nombre', value: 'nombre', sortable: true, width: '150px', type: 'text', filter: null},
@@ -437,14 +448,13 @@
             search: '',
             itemsEdit: [],
             mobileFilter: false,
-            rules: {
-                required: value => !!value || 'Required.'
-            }
+            textFieldMaxLen:50,
+            emailFieldMaxLen:50,
+            telephoneFieldLen: 10
         }),
         methods: {
             onChangeCell(val, rowId, cell){
-                console.log(val);
-                if(!val) return;
+                //if(!val && this.dataType(cell) !== 'check') return;
                 const index = this.itemsEdit.findIndex(item => item.id === rowId);
                 if(index !== -1) this.itemsEdit[index][cell] = val;
                 else{
@@ -452,6 +462,7 @@
                     row[cell] = val;
                     this.itemsEdit.push(row);
                 }
+                console.log(this.itemsEdit);
             },
             onEditRow(event, rowId, cell){
                 const index = this.items.findIndex(item => item.id === rowId);
@@ -473,7 +484,7 @@
                 return item.edit.includes(cell);
             },
             onFilter(val, col){
-                if(!val) return;
+                if(!val) this.clearFilter(val, col);
                 const index = this.headers.findIndex(item => item.value === col);
                 const header = this.headers[index];
                 const dataType = this.headers[index].type;
@@ -519,6 +530,21 @@
                 else{
                     return value;
                 }
+            },
+            isFilteredIcon(filter){
+                if(filter){
+                    if(typeof filter === 'object')
+                        if(filter.hasOwnProperty('from') && filter.hasOwnProperty('to'))
+                            if(filter.from && filter.to) return true;
+                            else return false;
+                        else return true;
+                    else return true;
+                }else return false;                
+            },
+            isValid(type, val){
+                if(type === 'telephone' && val.length < this.telephoneFieldLen) return true;
+                else if(!val) return true;
+                else return false;
             }
         },
         computed: {
