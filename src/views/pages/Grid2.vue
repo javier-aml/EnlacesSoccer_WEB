@@ -19,8 +19,30 @@
                                     {{header.text}}
                                     <v-btn 
                                         icon v-bind="attrs" 
+                                        @click.prevent="refresh"
+                                        v-if="header.type === 'add'"
+                                        :disabled="isReset"
+                                    >
+                                        <v-icon>mdi-refresh</v-icon>
+                                    </v-btn>
+                                    <v-btn 
+                                        icon v-bind="attrs" 
+                                        v-if="header.type === 'add'"
+                                        :disabled="isSave"
+                                    >
+                                        <v-icon>mdi-content-save</v-icon>
+                                    </v-btn>
+                                    <v-btn 
+                                        icon v-bind="attrs" 
+                                        @click.prevent="addLine"
+                                        v-if="header.type === 'add'"
+                                    >
+                                        <v-icon>mdi-plus-circle-outline</v-icon>
+                                    </v-btn>
+                                    <v-btn 
+                                        icon v-bind="attrs" 
                                         v-on="on"
-                                        v-if="header.value !== 'eliminar'"
+                                        v-else-if="header.type !== 'delete'"
                                     >
                                         <v-icon small :disabled="isFilteredIcon(header.filter) ? false : true">mdi-filter</v-icon>
                                     </v-btn>
@@ -52,7 +74,7 @@
                                         >
                                             <template v-slot:activator="{on}">
                                                 <v-text-field
-                                                    :value="header.filter.from"
+                                                    :value="dateFormat(header.filter.from)"
                                                     label="De :"
                                                     readonly
                                                     v-on="on"
@@ -74,7 +96,7 @@
                                         >
                                             <template v-slot:activator="{on}">
                                                 <v-text-field
-                                                    :value="header.filter.to"
+                                                    :value="dateFormat(header.filter.to)"
                                                     label="A :"
                                                     readonly
                                                     v-on="on"
@@ -256,6 +278,7 @@
                     <v-checkbox
                         @change="onChangeCell($event, item.id, cell)"
                         v-if="dataType(cell) === 'delete'"
+                        :disabled="item.id < 0"
                     ></v-checkbox>
                     <v-checkbox
                         @change="onChangeCell($event, item.id, cell)"
@@ -268,6 +291,7 @@
                         dense single-line
                         :maxlength="textFieldMaxLen"
                         :error="isValid(dataType(cell), item[cell])"
+                        style="margin-top: 18px;"
                     >
                     </v-text-field>
                     <simple-mask
@@ -283,7 +307,7 @@
                             applyAfter: false,
                             alphanumeric: false,
                             lowerCase: false,
-                            error: isValid(dataType(cell), item[cell])
+                            error: isValid(dataType(cell), item[cell], cell, item.id)
                         }"
                     >
                     </simple-mask>
@@ -294,6 +318,7 @@
                         dense single-line
                         :maxlength="emailFieldMaxLen"
                         :error="isValid(dataType(cell), item[cell])"
+                        style="margin-top: 18px;"
                     >
                     </v-text-field>
                     <v-menu
@@ -304,7 +329,7 @@
                     >
                         <template v-slot:activator="{on}">
                             <v-text-field
-                                :value="item[cell]"
+                                :value="dateFormat(item[cell])"
                                 readonly
                                 v-on="on"
                                 :error="isValid(dataType(cell), item[cell])"
@@ -360,7 +385,7 @@
                             :value="item[cell]"
                             v-else-if="edited(item,cell) && dataType(cell) === 'text'"
                             dense single-line
-                            style="max-width: 150px"
+                            style="max-width: 150px;"
                         >
                         </v-text-field>
                         <v-text-field-simplemask
@@ -384,7 +409,7 @@
                             :value="item[cell]"
                             v-else-if="edited(item,cell) && dataType(cell) === 'email'"
                             dense single-line
-                            style="max-width: 150px"
+                            style="max-width: 150px;"
                         >
                         </v-text-field>
                         <v-text-field
@@ -393,7 +418,7 @@
                             v-else-if="edited(item,cell) && dataType(cell) === 'date'"
                             dense single-line
                             type="date"
-                            style="max-width: 150px"
+                            style="max-width: 150px;"
                         >
                         </v-text-field>
                         <v-select
@@ -403,12 +428,12 @@
                             :value="item[cell]"
                             item-text="Nom"
                             item-value="Id"
-                            style="max-width: 150px"
+                            style="max-width: 150px;"
                         ></v-select>
                         <span
                             v-else
                             @click="onEditRow($event, item.id, cell)"
-                            style="max-width: 150px"
+                            style="max-width: 150px;"
                         >
                             {{cellData(cell, item[cell], dataType(cell))}}
                         </span>
@@ -432,10 +457,15 @@
                 {text: 'E-Mail', value: 'correo', sortable: false, width: '150px', type: 'email', filter: null},
                 {text: 'Fecha', value: 'fecha', sortable: false, width: '150px', type: 'date', filter: {from: null, to: null}},
                 {text: 'Pais', value: 'pais', sortable: true, width: '150px', type: 'combo', filter: null},
-                {text: 'Valido', value: 'valido', sortable: false, width: '150px', type: 'check', filter: null},
-                {text: 'Eliminar', value: 'eliminar', sortable: false, width: '150px', type: 'delete', filter: null}
+                {text: 'Valido', value: 'valido', sortable: false, width: '110px', type: 'check', filter: null},
+                {text: 'Eliminar', value: 'eliminar', sortable: false, width: '50px', type: 'delete', filter: null},
+                {text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null}
             ],
             items: [
+                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: false, eliminar: false, edit: []},
+                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: false, eliminar: false, edit: []}
+            ],
+            itemsData: [
                 {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: false, eliminar: false, edit: []},
                 {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: false, eliminar: false, edit: []}
             ],
@@ -444,17 +474,19 @@
                 pais: [
                     {Id: 1, Nom: 'Mexico'},
                     {Id: 2, Nom: 'EUA'},
-                ]},
+                ],
+                defaults: {pais: 1}
+            },
             search: '',
             itemsEdit: [],
             mobileFilter: false,
             textFieldMaxLen:50,
             emailFieldMaxLen:50,
-            telephoneFieldLen: 10
+            telephoneFieldLen: 10,
+            isAddedData: false
         }),
         methods: {
             onChangeCell(val, rowId, cell){
-                //if(!val && this.dataType(cell) !== 'check') return;
                 const index = this.itemsEdit.findIndex(item => item.id === rowId);
                 if(index !== -1) this.itemsEdit[index][cell] = val;
                 else{
@@ -462,7 +494,6 @@
                     row[cell] = val;
                     this.itemsEdit.push(row);
                 }
-                console.log(this.itemsEdit);
             },
             onEditRow(event, rowId, cell){
                 const index = this.items.findIndex(item => item.id === rowId);
@@ -522,11 +553,12 @@
                 this.mobileFilter = !this.mobileFilter
             },
             cellData(cell, value, dataType){
-                if(dataType === 'combo'){
+                if(!value) return '-';
+                else if(dataType === 'combo'){
                     return this.combos[cell][this.combos[cell].findIndex(item => item.Id === value)].Nom;
                 }else if(dataType === 'telephone'){
                     return '(' + (value + '').substring(0,3) + ') ' + (value + '').substring(3,value.length);
-                }
+                }else if(dataType === 'date') return this.dateFormat(value);
                 else{
                     return value;
                 }
@@ -542,13 +574,53 @@
                 }else return false;                
             },
             isValid(type, val){
-                if(type === 'telephone' && val.length < this.telephoneFieldLen) return true;
+                let result = false;
+                if(type === 'telephone') result = (val ? val.length : 0) < this.telephoneFieldLen ? true : false;
                 else if(type === 'email'){
                     const email = (val + '').toLowerCase();
-                    return !email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+                    const validEmail = !email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+                    result = validEmail;
+                }else if(type === 'combo' && val === '-') result = true;
+                else if(!val) result = true;
+                return result;
+            },
+            addLine(){
+                const idIndex = this.items.length ? this.items[this.items.length -1].id + (this.items[this.items.length -1].id > 0 ? 1 : -1) : 1;
+                const emptyLine = {id: idIndex * (idIndex > 0 ? -1 : 1), edit: []};
+                for(let item of this.headers){
+                    if(item.type === 'text') {
+                        emptyLine[item.value] = '';
+                        emptyLine.edit.push(item.value);
+                    }else if(item.type === 'telephone') {
+                        emptyLine[item.value] = '-';
+                        emptyLine.edit.push(item.value);
+                    }else if(item.type === 'email'){
+                        emptyLine[item.value] = '';
+                        emptyLine.edit.push(item.value);
+                    }else if(item.type === 'date') {
+                        emptyLine[item.value] = this.currentDate;
+                        emptyLine.edit.push(item.value);
+                    }else if(item.type === 'combo') {
+                        emptyLine[item.value] = this.combos.hasOwnProperty(item.value) ? this.combos.defaults[item.value] : '-';
+                        emptyLine.edit.push(item.value);
+                    }else if(item.type === 'check') emptyLine[item.value] = false;
+                    else if(item.type === 'delete') emptyLine[item.value] = false;
+
                 }
-                else if(!val) return true;
-                else return false;
+                this.isAddedData = true;
+                this.items.push(emptyLine);
+            },
+            refresh(){
+                this.items = this.itemsData.map(item => {return {...item}});
+                this.items = this.items.filter(item => item.id > 0);
+                this.items.forEach(item => item.edit = []);
+                this.isAddedData = false;
+                this.itemsEdit = [];
+            },
+            dateFormat(val){
+                if(!val) return null;
+                const valArr = val.trim().split('-');
+                return valArr[2] + '/' + valArr[1] + '/' + valArr[0];
             }
         },
         computed: {
@@ -563,6 +635,27 @@
                     }else return false;
                 }
                 return this.headers.some(item => isFiltered(item.filter));
+            },
+            currentDate(){
+                return (new Date()).toISOString().substring(0,10);
+            },
+            isSave(){
+                let valid = true;
+                const dataTypes = ['text', 'telephone', 'email', 'combo'];
+                for(const row of this.items){
+                    for(const cell in row){
+                        if(dataTypes.includes(this.dataType(cell))){
+                            let isValid = this.isValid(this.dataType(cell), row[cell]);
+                            if(isValid) valid = false;
+                        }
+                    }
+                }
+                const added = this.items.some(item => item.id < 0);
+                return !(valid && (added || this.itemsEdit.length > 0));
+            },
+            isReset(){
+                const added = this.items.some(item => item.id < 0);
+                return !(added || this.itemsEdit.length > 0);
             }
         }
     }
