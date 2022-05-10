@@ -446,7 +446,7 @@
     </v-data-table>
 </template>
 <script>
-    import SimpleMask from '../../components/SimpleMask.vue'
+    import SimpleMask from '../components/SimpleMask.vue'
     export default{
         components: {
             SimpleMask
