@@ -23,7 +23,8 @@ import vgrid from '../../components/Grid.vue';
                 {text: 'Valido', value: 'valido', sortable: false, width: '110px', type: 'check'},
                 {text: 'Eliminar', value: 'eliminar', sortable: false, width: '50px', type: 'delete'}
             ],
-            gridCombo: [{name: 'pais', data: 'getPaises', default: 1}]      
+            gridCombo: [{name: 'pais', data: 'getPaises', default: 1}],
+            gridData: ''      
         })
     }
 </script>

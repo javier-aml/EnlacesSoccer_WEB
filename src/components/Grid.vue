@@ -537,7 +537,9 @@ import SimpleMask from '../components/SimpleMask.vue'
             cellData(cell, value, dataType){
                 if(!value) return '-';
                 else if(dataType === 'combo'){
-                    return this.combos[cell][this.combos[cell].findIndex(item => item.Id === value)].Nom;
+                    if(this.combos[cell][this.combos[cell].findIndex(item => item.Id === value)])
+                        return this.combos[cell][this.combos[cell].findIndex(item => item.Id === value)].Nom;
+                    else return
                 }else if(dataType === 'telephone'){
                     return '(' + (value + '').substring(0,3) + ') ' + (value + '').substring(3,value.length);
                 }else if(dataType === 'date') return this.dateFormat(value);
