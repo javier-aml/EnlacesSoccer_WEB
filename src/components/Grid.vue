@@ -446,30 +446,17 @@
     </v-data-table>
 </template>
 <script>
-    import SimpleMask from '../components/SimpleMask.vue'
+    import { it } from 'vuetify/lib/locale';
+import SimpleMask from '../components/SimpleMask.vue'
     export default{
         components: {
             SimpleMask
         },
+        props: ['headerProp', 'dataProp', 'comboProp'],
         data: () => ({
-            headers: [
-                {text: 'Nombre', value: 'nombre', sortable: true, width: '150px', type: 'text', filter: null},
-                {text: 'Telefono', value: 'telefono', sortable: false, width: '150px', type: 'telephone', filter: null},
-                {text: 'E-Mail', value: 'correo', sortable: false, width: '150px', type: 'email', filter: null},
-                {text: 'Fecha', value: 'fecha', sortable: false, width: '150px', type: 'date', filter: {from: null, to: null}},
-                {text: 'Pais', value: 'pais', sortable: true, width: '150px', type: 'combo', filter: null},
-                {text: 'Valido', value: 'valido', sortable: false, width: '110px', type: 'check', filter: null},
-                {text: 'Eliminar', value: 'eliminar', sortable: false, width: '50px', type: 'delete', filter: null},
-                {text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null}
-            ],
-            items: [
-                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: false, eliminar: false, edit: []},
-                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: false, eliminar: false, edit: []}
-            ],
-            itemsData: [
-                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: false, eliminar: false, edit: []},
-                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: false, eliminar: false, edit: []}
-            ],
+            headers: [],
+            items: [],
+            itemsData: [],
             itemsFilter: [],
             combos: {
                 pais: [
@@ -630,6 +617,36 @@
                     return row;
                 });
                 console.log(JSON.stringify(gridData));
+            },
+            async parseData(){
+                this.headers = [];
+                this.items = [];
+                this.itemsData = [];
+                for(let item of this.headerProp){
+                    this.headers.push({
+                        text: item.text,
+                        value: item.value,
+                        sortable: false,
+                        width: item.width,
+                        type: item.type,
+                        filter: item.type === 'date' ? {from: null, to: null} : null
+                    });
+                }
+                this.headers.push({text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null});
+                for(let item of this.dataProp){
+                    this.items.push({...item, valido: false, eliminar: false, edit: []});
+                    this.itemsData.push({...item, valido: false, eliminar: false, edit: []});
+                }
+                for(let item of this.comboProp){
+                    await this.$store.dispatch(item.data);
+                    let storeName = (item.data.toLowerCase()).replace(/get/g, '');
+                    let storeData = [];
+                    for(let item of this.$store.state[storeName]){
+                        storeData.push({Id: item.Id, Nom: item.Nom});
+                    }
+                    this.combos[item.name] = storeData;
+                    this.combos.defaults = {[item.name]: item.default, ...this.combos.defaults};
+                }
             }
         },
         computed: {
@@ -666,6 +683,9 @@
                 const added = this.items.some(item => item.id < 0);
                 return !(added || this.itemsEdit.length > 0);
             }
+        },
+        async mounted() {
+            await this.parseData();
         }
     }
 </script>
