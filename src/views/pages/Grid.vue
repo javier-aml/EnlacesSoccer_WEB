@@ -23,10 +23,6 @@ import vgrid from '../../components/Grid.vue';
                 {text: 'Valido', value: 'valido', sortable: false, width: '110px', type: 'check'},
                 {text: 'Eliminar', value: 'eliminar', sortable: false, width: '50px', type: 'delete'}
             ],
-            gridData: [
-                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1},
-                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2}
-            ],
             gridCombo: [{name: 'pais', data: 'getPaises', default: 1}]      
         })
     }

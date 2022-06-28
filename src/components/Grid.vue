@@ -458,13 +458,7 @@ import SimpleMask from '../components/SimpleMask.vue'
             items: [],
             itemsData: [],
             itemsFilter: [],
-            combos: {
-                pais: [
-                    {Id: 1, Nom: 'Mexico'},
-                    {Id: 2, Nom: 'EUA'},
-                ],
-                defaults: {pais: 1}
-            },
+            combos: {pais: [], defaults: {}},
             search: '',
             itemsEdit: [],
             mobileFilter: false,
@@ -633,7 +627,9 @@ import SimpleMask from '../components/SimpleMask.vue'
                     });
                 }
                 this.headers.push({text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null});
-                for(let item of this.dataProp){
+                let griData = await fetch('http://localhost:3000/ConsultarGrid');
+                griData = await griData.json();
+                for(let item of griData){
                     this.items.push({...item, valido: false, eliminar: false, edit: []});
                     this.itemsData.push({...item, valido: false, eliminar: false, edit: []});
                 }
