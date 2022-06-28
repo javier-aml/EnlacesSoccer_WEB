@@ -43,7 +43,11 @@
               ></v-select>
             </v-col>
 
-            
+            <v-col cols="12">
+              <grid>
+
+              </grid>    
+            </v-col>
             <v-col cols="12">
               <v-btn
                 :color="color"
@@ -85,7 +89,13 @@
 </template>
 
 <script>
+  //Importamos el archivo asociado al grid
+  import Grid from '../../components/Grid.vue'
   export default {
+    //Importamos páginas de componentes
+    components:{
+      Grid
+    },
     data() {
       return{
           habilitaGuardar: false,
