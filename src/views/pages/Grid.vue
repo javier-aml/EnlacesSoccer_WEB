@@ -24,7 +24,7 @@ import vgrid from '../../components/Grid.vue';
                 {text: 'Eliminar', value: 'eliminar', sortable: false, width: '50px', type: 'delete'}
             ],
             gridCombo: [{name: 'pais', data: 'getPaises', default: 1}],
-            gridData: ''      
+            gridData: 'GridPrueba'      
         })
     }
 </script>

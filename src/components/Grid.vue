@@ -447,7 +447,8 @@
 </template>
 <script>
     import { it } from 'vuetify/lib/locale';
-import SimpleMask from '../components/SimpleMask.vue'
+    import SimpleMask from '../components/SimpleMask.vue'
+    import axios from 'axios'
     export default{
         components: {
             SimpleMask
@@ -629,11 +630,18 @@ import SimpleMask from '../components/SimpleMask.vue'
                     });
                 }
                 this.headers.push({text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null});
-                let griData = await fetch('http://localhost:3000/ConsultarGrid');
-                griData = await griData.json();
+                const tableFieldsArr = [];
+                let tableFields = '';
+                for(let item of this.headerProp){
+                    if(item.value === 'eliminar') continue
+                    tableFieldsArr.push(item.value);
+                }
+                tableFields = tableFieldsArr.join(',');
+                let griData = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarGrid?psTabla=' + this.dataProp + '&psColumnas=' + tableFields, {}, { 'Access-Control-Allow-Origin': '*' });
+                griData = griData.data
                 for(let item of griData){
-                    this.items.push({...item, valido: false, eliminar: false, edit: []});
-                    this.itemsData.push({...item, valido: false, eliminar: false, edit: []});
+                    this.items.push({...item, eliminar: false, edit: []});
+                    this.itemsData.push({...item, eliminar: false, edit: []});
                 }
                 for(let item of this.comboProp){
                     await this.$store.dispatch(item.data);
