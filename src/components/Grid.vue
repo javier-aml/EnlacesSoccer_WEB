@@ -283,6 +283,7 @@
                     ></v-checkbox>
                     <v-checkbox
                         @change="onChangeCell($event, item.id, cell)"
+                        v-model="item[cell]"
                         v-else-if="dataType(cell) === 'check'"
                     ></v-checkbox>
                     <v-text-field

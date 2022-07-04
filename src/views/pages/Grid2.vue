@@ -463,12 +463,12 @@
                 {text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null}
             ],
             items: [
-                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: false, eliminar: false, edit: []},
-                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: false, eliminar: false, edit: []}
+                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: true, eliminar: false, edit: []},
+                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: true, eliminar: false, edit: []}
             ],
             itemsData: [
-                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: false, eliminar: false, edit: []},
-                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: false, eliminar: false, edit: []}
+                {id: 1, nombre: 'Javier', telefono: 4612347082, correo: 'javier_aml@outlook.com', fecha: '2022-03-21', pais: 1, valido: true, eliminar: false, edit: []},
+                {id: 2, nombre: 'Diego', telefono: 6121184026, correo: 'diego_aml@outlook.com', fecha: '2022-03-21', pais: 2, valido: true, eliminar: false, edit: []}
             ],
             itemsFilter: [],
             combos: {
