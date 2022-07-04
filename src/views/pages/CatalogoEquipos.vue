@@ -8,7 +8,6 @@
       <v-card-text>
         <v-form 
           ref="forma"
-          v-model="valid"
           class="multi-col-validation mt-6"
         >
           <v-row>
@@ -27,8 +26,8 @@
             </v-col>
 
             <v-col
-              cols="12"
               md="6"
+              cols="12"
             >
               <v-select
                 :color="color"
@@ -43,11 +42,17 @@
               ></v-select>
             </v-col>
 
+            
             <v-col cols="12">
-              <grid>
-
-              </grid>    
+            <Grid
+              :header-prop="gridHeader"
+              :data-prop="gridData"
+              :combo-prop="gridCombo"
+              ></Grid>
             </v-col>
+
+
+
             <v-col cols="12">
               <v-btn
                 :color="color"
@@ -98,12 +103,21 @@
     },
     data() {
       return{
-          habilitaGuardar: false,
           esGuardado: false,
           valMsg: 'Este campo es requerido',
           Nombre: null,
-          Idliga: null,
+          idLiga: null,
           color: '#03A9F4',
+          gridHeader: [
+                {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo'},
+                {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'text'},
+                {text: 'Equipo', value: 'Nombre', sortable: false, width: '150px', type: 'text'},
+                {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check'},
+                {text: 'Fecha Cambio', value: 'FechaUltimaMod', sortable: false, width: '150px', type: 'date'},
+                {text: 'PC Cambio', value: 'NombrePcMod', sortable: true, width: '150px', type: 'text'},
+            ],
+            gridCombo: [{name: 'liga', data: 'getLigas', default: 1}],
+            gridData: 'Equipo'
       }
     },
     computed: {
