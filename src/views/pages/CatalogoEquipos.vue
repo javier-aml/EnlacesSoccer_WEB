@@ -109,15 +109,15 @@
           idLiga: null,
           color: '#03A9F4',
           gridHeader: [
-                {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo'},
-                {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'text'},
-                {text: 'Equipo', value: 'Nombre', sortable: false, width: '150px', type: 'text'},
-                {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check'},
-                {text: 'Fecha Cambio', value: 'FechaUltimaMod', sortable: false, width: '150px', type: 'date'},
-                {text: 'PC Cambio', value: 'NombrePcMod', sortable: true, width: '150px', type: 'text'},
-            ],
-            gridCombo: [{name: 'liga', data: 'getLigas', default: 1}],
-            gridData: 'Equipo'
+            {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo'},
+            {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'telefono'},
+            {text: 'Equipo', value: 'Nombre', sortable: false, width: '150px', type: 'text'},
+            {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check'},
+            {text: 'Fecha Cambio', value: 'FechaUltimaMod', sortable: false, width: '150px', type: 'date'},
+            {text: 'PC Cambio', value: 'NombrePcMod', sortable: true, width: '150px', type: 'text'}
+          ],
+          gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
+          gridData: 'Equipo'
       }
     },
     computed: {

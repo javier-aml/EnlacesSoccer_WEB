@@ -460,7 +460,7 @@
             items: [],
             itemsData: [],
             itemsFilter: [],
-            combos: {pais: [], defaults: {}},
+            combos: {IdLiga: [], defaults: {}},
             search: '',
             itemsEdit: [],
             mobileFilter: false,
@@ -649,8 +649,10 @@
                     let storeName = (item.data.toLowerCase()).replace(/get/g, '');
                     let storeData = [];
                     for(let item of this.$store.state[storeName]){
-                        storeData.push({Id: item.Id, Nom: item.Nom});
+                        let keys = Object.keys(item);
+                        storeData.push({Id: item[keys[0]], Nom: item[keys[1]]});
                     }
+                    this.combos[item.name] = [];
                     this.combos[item.name] = storeData;
                     this.combos.defaults = {[item.name]: item.default, ...this.combos.defaults};
                 }
