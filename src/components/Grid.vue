@@ -58,6 +58,14 @@
                                         @input="onFilter($event, header.value)"
                                     ></v-text-field>
                                     <v-text-field
+                                        v-if="header.type === 'number'"
+                                        class="pa-4"
+                                        :label="`${header.text} :`"
+                                        :autofocus="true"
+                                        :value="header.filter"
+                                        @input="onFilter($event, header.value)"
+                                    ></v-text-field>
+                                    <v-text-field
                                         v-if="header.type === 'email'"
                                         class="pa-4"
                                         :label="`${header.text} :`"
@@ -296,6 +304,17 @@
                         style="margin-top: 18px;"
                     >
                     </v-text-field>
+                    <v-text-field
+                        @input="onChangeCell($event, item.id, cell)"
+                        :value="item[cell]"
+                        v-else-if="edited(item,cell) && dataType(cell) === 'number'"
+                        dense single-line
+                        type="number"
+                        :maxlength="numberFieldMaxLen"
+                        :error="isValid(dataType(cell), item[cell])"
+                        style="margin-top: 18px;"
+                    >
+                    </v-text-field>
                     <simple-mask
                         :value="item[cell]"
                         :ref="cell"
@@ -355,6 +374,11 @@
                         item-value="Id"
                         :error="isValid(dataType(cell), item[cell])"
                     ></v-select>
+                    <span
+                        v-else-if="dataType(cell) === 'link'"
+                    >
+                        {{cellData(cell, item[cell], dataType(cell), 1)}}
+                    </span>
                     <span
                         v-else
                         @click="onEditRow($event, item.id, cell)"
@@ -460,11 +484,12 @@
             items: [],
             itemsData: [],
             itemsFilter: [],
-            combos: {IdLiga: [], defaults: {}},
+            combos: {},
             search: '',
             itemsEdit: [],
             mobileFilter: false,
             textFieldMaxLen:50,
+            numberFieldMaxLen:50,
             emailFieldMaxLen:50,
             telephoneFieldLen: 10,
             isAddedData: false
@@ -482,6 +507,9 @@
             onEditRow(event, rowId, cell){
                 const index = this.items.findIndex(item => item.id === rowId);
                 if(!this.items[index].edit.includes(cell)) this.items[index].edit.push(cell);
+            },
+            onclick(event, rowId, cell){
+                console.log('Clicked!');
             },
             colWidth(cell){
                 const index = this.headers.findIndex(item => item.value === cell);
@@ -536,18 +564,19 @@
             mobileFilterToggle(){
                 this.mobileFilter = !this.mobileFilter
             },
-            cellData(cell, value, dataType){
+            cellData(cell, value, dataType, link){
                 if(!value) return '-';
                 else if(dataType === 'combo'){
+                    if(!this.combos[cell]) return;
                     if(this.combos[cell][this.combos[cell].findIndex(item => item.Id === value)])
                         return this.combos[cell][this.combos[cell].findIndex(item => item.Id === value)].Nom;
                     else return
                 }else if(dataType === 'telephone'){
                     return '(' + (value + '').substring(0,3) + ') ' + (value + '').substring(3,value.length);
                 }else if(dataType === 'date') return this.dateFormat(value);
-                else{
-                    return value;
-                }
+                else if(dataType === 'link' && link === 1) return value.split('|')[0];
+                else if(dataType === 'link' && link === 2) return value.split('|')[1];
+                else return value;
             },
             isFilteredIcon(filter){
                 if(filter){
@@ -575,6 +604,9 @@
                 const emptyLine = {id: idIndex * (idIndex > 0 ? -1 : 1), edit: []};
                 for(let item of this.headers){
                     if(item.type === 'text') {
+                        emptyLine[item.value] = '';
+                        emptyLine.edit.push(item.value);
+                    }else if(item.type === 'number') {
                         emptyLine[item.value] = '';
                         emptyLine.edit.push(item.value);
                     }else if(item.type === 'telephone') {
@@ -635,11 +667,11 @@
                 let tableFields = '';
                 for(let item of this.headerProp){
                     if(item.value === 'eliminar') continue
-                    tableFieldsArr.push(item.value);
+                    else tableFieldsArr.push(item.value);
                 }
                 tableFields = tableFieldsArr.join(',');
                 let griData = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarGrid?psTabla=' + this.dataProp + '&psColumnas=' + tableFields, {}, { 'Access-Control-Allow-Origin': '*' });
-                griData = griData.data
+                griData = griData.data;
                 for(let item of griData){
                     this.items.push({...item, eliminar: false, edit: []});
                     this.itemsData.push({...item, eliminar: false, edit: []});
@@ -652,8 +684,8 @@
                         let keys = Object.keys(item);
                         storeData.push({Id: item[keys[0]], Nom: item[keys[1]]});
                     }
-                    this.combos[item.name] = [];
-                    this.combos[item.name] = storeData;
+                    const comboNull = {[item.name]: storeData, ...this.combos}
+                    this.combos = comboNull
                     this.combos.defaults = {[item.name]: item.default, ...this.combos.defaults};
                 }
             }
@@ -676,7 +708,7 @@
             },
             isSave(){
                 let valid = true;
-                const dataTypes = ['text', 'telephone', 'email', 'combo'];
+                const dataTypes = ['text', 'number', 'telephone', 'email', 'combo'];
                 for(const row of this.items){
                     for(const cell in row){
                         if(dataTypes.includes(this.dataType(cell))){

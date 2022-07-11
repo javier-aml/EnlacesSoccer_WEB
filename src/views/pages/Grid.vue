@@ -16,14 +16,16 @@ import vgrid from '../../components/Grid.vue';
         data: () => ({
             gridHeader: [
                 {text: 'Nombre', value: 'nombre', sortable: true, width: '150px', type: 'text'},
+                {text: 'Numero', value: 'numero', sortable: true, width: '150px', type: 'number'},
                 {text: 'Telefono', value: 'telefono', sortable: false, width: '150px', type: 'telephone'},
                 {text: 'E-Mail', value: 'correo', sortable: false, width: '150px', type: 'email'},
                 {text: 'Fecha', value: 'fecha', sortable: false, width: '150px', type: 'date'},
-                {text: 'Pais', value: 'pais', sortable: true, width: '150px', type: 'combo'},
+                {text: 'Pais', value: 'IdPais', sortable: true, width: '150px', type: 'combo'},
                 {text: 'Valido', value: 'valido', sortable: false, width: '110px', type: 'check'},
+                {text: 'Link', value: 'link', sortable: false, width: '110px', type: 'link'},
                 {text: 'Eliminar', value: 'eliminar', sortable: false, width: '50px', type: 'delete'}
             ],
-            gridCombo: [{name: 'pais', data: 'getPaises', default: 1}],
+            gridCombo: [{name: 'IdPais', data: 'getPaises', default: 1}],
             gridData: 'GridPrueba'      
         })
     }
