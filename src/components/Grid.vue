@@ -376,6 +376,8 @@
                     ></v-select>
                     <span
                         v-else-if="dataType(cell) === 'link'"
+                        @click="onClickLink($event, cellData(cell, item[cell], dataType(cell), 2))"
+                        id="link"
                     >
                         {{cellData(cell, item[cell], dataType(cell), 1)}}
                     </span>
@@ -508,8 +510,8 @@
                 const index = this.items.findIndex(item => item.id === rowId);
                 if(!this.items[index].edit.includes(cell)) this.items[index].edit.push(cell);
             },
-            onclick(event, rowId, cell){
-                console.log('Clicked!');
+            onClickLink(event, href){
+                window.open(href);
             },
             colWidth(cell){
                 const index = this.headers.findIndex(item => item.value === cell);
@@ -739,5 +741,13 @@
     }
     .fade-enter, .fade-leave-to{
         opacity: 0;
+    }
+    #link{
+        color: #9155fd;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    #link:hover{
+        text-decoration: underline;
     }      
 </style>
