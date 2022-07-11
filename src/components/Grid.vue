@@ -43,7 +43,7 @@
                                     <v-btn 
                                         icon v-bind="attrs" 
                                         v-on="on"
-                                        v-else-if="header.type !== 'delete'"
+                                        v-else-if="header.type !== 'delete' && header.type !== 'link'"
                                     >
                                         <v-icon small :disabled="isFilteredIcon(header.filter) ? false : true">mdi-filter</v-icon>
                                     </v-btn>
@@ -745,7 +745,7 @@
     #link{
         color: #9155fd;
         font-size: 16px;
-        font-weight: 500;
+        font-weight: 400;
     }
     #link:hover{
         text-decoration: underline;
