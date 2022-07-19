@@ -11,37 +11,6 @@
           class="multi-col-validation mt-6"
         >
           <v-row>
-            <v-col
-              md="6"
-              cols="12"
-            >
-              <v-text-field
-                :color="color"
-                v-model="Nombre"
-                :rules="[() => !!Nombre || valMsg]"
-                label="Nombre"
-                dense
-                outlined
-              ></v-text-field>
-            </v-col>
-
-            <v-col
-              md="6"
-              cols="12"
-            >
-              <v-select
-                :color="color"
-                v-model="idLiga"
-                :rules="[() => !!idLiga || valMsg]"
-                dense
-                outlined
-                label="Liga"
-                :items="ligas"
-                item-text="Nombre"
-                item-value="idLiga"
-              ></v-select>
-            </v-col>
-
             
             <v-col cols="12">
             <Grid
@@ -50,8 +19,6 @@
               :combo-prop="gridCombo"
               ></Grid>
             </v-col>
-
-
 
             <v-col cols="12">
               <v-btn
@@ -105,16 +72,13 @@
       return{
           esGuardado: false,
           valMsg: 'Este campo es requerido',
-          Nombre: null,
-          idLiga: null,
           color: '#03A9F4',
           gridHeader: [
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo'},
-            {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'telefono'},
+            {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'number'},
             {text: 'Equipo', value: 'Nombre', sortable: false, width: '150px', type: 'text'},
             {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check'},
-            {text: 'Fecha Cambio', value: 'FechaUltimaMod', sortable: false, width: '150px', type: 'date'},
-            {text: 'PC Cambio', value: 'NombrePcMod', sortable: true, width: '150px', type: 'text'}
+            {text: 'Jugadores', value: 'Jugadores', sortable: false, width: '150px', type: 'link'}
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
           gridData: 'Equipo'
