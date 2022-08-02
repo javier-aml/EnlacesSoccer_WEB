@@ -8,7 +8,9 @@ const state = {
   paises: [],
   estados: [],
   municipios: [],
-  ligas: []
+  ligas: [],
+  torneos: [],
+  equipos: []
 }
 
 const getters = {
@@ -23,6 +25,12 @@ const getters = {
   },
   items: ligas => {
     return ligas.Nombre;
+  },
+  items: torneos => {
+    return torneos.Nombre;
+  },
+  items: equipos => {
+    return equipos.Nombre;
   }
 }
 
@@ -38,6 +46,12 @@ const mutations = {
   },
   SET_LIGAS(state, items) {
     state.ligas = items
+  },
+  SET_TORNEOS(state, items) {
+    state.torneos = items
+  },
+  SET_EQUIPOS(state, items) {
+    state.equipos = items
   }
 }
 
@@ -70,6 +84,22 @@ const actions = {
     try {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarLigas?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_LIGAS', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+  async getTorneos({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarTorneos?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_TORNEOS', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+  async getEquipos({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarEquipos?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_EQUIPOS', response.data);
     } catch (error) {
       return console.log(error);
     }

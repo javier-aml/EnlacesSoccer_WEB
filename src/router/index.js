@@ -92,6 +92,14 @@ const routes = [
     },
   },
   {
+    path: '/pages/Catalogo-Jugador-Equipo',
+    name: 'catalogo-jugador-equipo',
+    component: () => import('@/views/pages/CatalogoJugadorEquipo.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/pages/grid',
     name: 'grid',
     component: () => import('@/views/pages/Grid.vue'),

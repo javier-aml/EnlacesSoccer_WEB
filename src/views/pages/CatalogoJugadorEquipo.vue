@@ -25,7 +25,7 @@
                 :color="color"
                 class="me-3 mt-4"
                 :disabled="habilitaGuardar"
-                @click.prevent="guardaTipoSancion"
+                @click.prevent="guardaJugadorEquipo"
               >
                 Guardar
               </v-btn>
@@ -46,7 +46,7 @@
         style="padding-top:50px"
         class="justify-center"
       >
-        El tipo de sanción fue registrado correctamente.
+        El jugador fue registrado correctamente.
       </v-card-title>
       <v-btn
         :color="color"
@@ -75,20 +75,34 @@
           color: '#03A9F4',
           gridHeader: [
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '250px', type: 'combo'},
-            {text: 'IdTipoSancion', value: 'IdTipoSancion', sortable: false, width: '50px', type: 'number'},
-            {text: 'Clave', value: 'Clave', sortable: false, width: '150px', type: 'text'},
-            {text: 'Descripcion', value: 'Descripcion', sortable: false, width: '500px', type: 'text'},
-            {text: 'Juegos', value: 'JuegosSuspension', sortable: false, width: '50px', type: 'number'},
-            {text: 'Baja', value: 'CausaBaja', sortable: false, width: '50px', type: 'check'},
-            {text: 'Activo', value: 'Activa', sortable: false, width: '50px', type: 'check'}
+            {text: 'IdArbitro', value: 'IdArbitro', sortable: false, width: '50px', type: 'number'},
+            {text: 'Nombre', value: 'Nombre', sortable: false, width: '500px', type: 'text'},
+            {text: 'Telefono', value: 'Telefono', sortable: false, width: '50px', type: 'text'},
+            {text: 'Juegos', value: 'JuegosArbitrados', sortable: false, width: '50px', type: 'number'},
+            {text: 'Activo', value: 'Activo', sortable: false, width: '50px', type: 'check'}
           ],
-          gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
-          gridData: 'TipoSancion'
+          gridData: 'JugadorEquipo'
       }
     },
     computed: {
       ligas() {
         const data = this.$store.state.ligas;
+        const dataArr = [];
+        for(let item of data){
+          dataArr.push(item);
+        }
+        return dataArr;
+      },
+      torneos() {
+        const data = this.$store.state.torneos;
+        const dataArr = [];
+        for(let item of data){
+          dataArr.push(item);
+        }
+        return dataArr;
+      },
+      equipos() {
+        const data = this.$store.state.equipos;
         const dataArr = [];
         for(let item of data){
           dataArr.push(item);
@@ -101,8 +115,8 @@
       }
     },
     methods: {
-      async guardarTipoSancion() {
-        const data = await this.$store.dispatch('postGuardarTipoSancion', {
+      async guardarArbitro() {
+        const data = await this.$store.dispatch('postGuardarArbitro', {
           IdLiga: this.IdLiga,
           Nombre: this.Nombre
         });
@@ -115,6 +129,12 @@
     },
     async mounted() {
       await this.$store.dispatch('getLigas');
+    },
+     async mounted() {
+      await this.$store.dispatch('getTorneos');
+    },
+     async mounted() {
+      await this.$store.dispatch('getEquipos');
     }
   }
 </script>

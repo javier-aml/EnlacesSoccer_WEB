@@ -74,11 +74,11 @@
           valMsg: 'Este campo es requerido',
           color: '#03A9F4',
           gridHeader: [
-            {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo'},
+            {text: 'Liga', value: 'IdLiga', sortable: true, width: '250px', type: 'combo'},
             {text: 'IdArbitro', value: 'IdArbitro', sortable: false, width: '50px', type: 'number'},
-            {text: 'Nombre', value: 'Nombre', sortable: false, width: '250px', type: 'text'},
+            {text: 'Nombre', value: 'Nombre', sortable: false, width: '500px', type: 'text'},
             {text: 'Telefono', value: 'Telefono', sortable: false, width: '50px', type: 'text'},
-            {text: 'Juegos', value: 'JuegosArbitrados', sortable: false, width: '150px', type: 'number'},
+            {text: 'Juegos', value: 'JuegosArbitrados', sortable: false, width: '50px', type: 'number'},
             {text: 'Activo', value: 'Activo', sortable: false, width: '50px', type: 'check'}
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
