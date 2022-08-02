@@ -76,6 +76,22 @@ const routes = [
     },
   },
   {
+    path: '/pages/Catalogo-TipoSancion',
+    name: 'catalogo-tiposancion',
+    component: () => import('@/views/pages/CatalogoTipoSancion.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
+    path: '/pages/Catalogo-Arbitro',
+    name: 'catalogo-arbitro',
+    component: () => import('@/views/pages/CatalogoArbitro.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/pages/grid',
     name: 'grid',
     component: () => import('@/views/pages/Grid.vue'),
