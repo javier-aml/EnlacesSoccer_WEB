@@ -508,6 +508,8 @@
             },
             onEditRow(event, rowId, cell){
                 const index = this.items.findIndex(item => item.id === rowId);
+                let headerIndex = this.headers.map(item => item.value).indexOf(cell);
+                if(!this.headerProp[headerIndex].editable) return;
                 if(!this.items[index].edit.includes(cell)) this.items[index].edit.push(cell);
             },
             onClickLink(event, href){
@@ -642,13 +644,20 @@
                 const valArr = val.trim().split('-');
                 return valArr[2] + '/' + valArr[1] + '/' + valArr[0];
             },
-            onSave(){
-                const gridData = this.itemsEdit.map(item => {
+            async onSave(){
+                let gridData = this.itemsEdit.map(item => {
                     const row = {...item};
                     delete row.edit;
                     return row;
                 });
-                console.log(JSON.stringify(gridData));
+                gridData = JSON.stringify(gridData);
+                let apiReq = process.env.VUE_APP_API_URL + '/GuardarGrid'; 
+                apiReq = await axios.post(apiReq, {
+                    data:{
+                        psSpUI: this.dataProp,
+                        psData: gridData
+                }}, { 'Access-Control-Allow-Origin': '*' }); 
+                await parseData();              
             },
             async parseData(){
                 this.headers = [];
@@ -668,15 +677,16 @@
                 const tableFieldsArr = [];
                 let tableFields = '';
                 for(let item of this.headerProp){
-                    if(item.value === 'eliminar') continue
+                    if(item.value === 'delete') continue
                     else tableFieldsArr.push(item.value);
                 }
                 tableFields = tableFieldsArr.join(',');
-                let griData = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarGrid?psTabla=' + this.dataProp + '&psColumnas=' + tableFields, {}, { 'Access-Control-Allow-Origin': '*' });
+                const apiReq = process.env.VUE_APP_API_URL + '/ConsultarGrid?psSpSel=' + this.dataProp; 
+                let griData = await axios.get(apiReq, {}, { 'Access-Control-Allow-Origin': '*' });
                 griData = griData.data;
                 for(let item of griData){
-                    this.items.push({...item, eliminar: false, edit: []});
-                    this.itemsData.push({...item, eliminar: false, edit: []});
+                    this.items.push({...item, delete: false, edit: []});
+                    this.itemsData.push({...item, delete: false, edit: []});
                 }
                 for(let item of this.comboProp){
                     await this.$store.dispatch(item.data);
