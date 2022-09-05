@@ -98,7 +98,7 @@ const actions = {
   },
   async getEquipos({commit}) {
     try {
-      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarEquipos?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/BuscarEquipos?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_EQUIPOS', response.data);
     } catch (error) {
       return console.log(error);

@@ -76,12 +76,12 @@
           gridHeader: [
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: false},
             {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'number', editable: true},
-            {text: 'Equipo', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true},
+            {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true},
             {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check', editable: true},
             {text: 'Jugadores', value: 'Jugadores', sortable: false, width: '150px', type: 'link', editable: true}
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
-          gridData: 'CatalogoEquipos'
+          gridData: 'BuscarEquipos'
       }
     },
     computed: {
