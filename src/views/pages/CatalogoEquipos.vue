@@ -17,6 +17,7 @@
               :header-prop="gridHeader"
               :data-prop="gridData"
               :combo-prop="gridCombo"
+              :key-prop="gridKey"
               ></Grid>
             </v-col>
 
@@ -81,7 +82,8 @@
             {text: 'Jugadores', value: 'Jugadores', sortable: false, width: '150px', type: 'link', editable: true}
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
-          gridData: 'BuscarEquipos'
+          gridData: 'BuscarEquipos',
+          gridKey: 'IdEquipo'
       }
     },
     computed: {
