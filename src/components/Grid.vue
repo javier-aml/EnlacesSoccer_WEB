@@ -285,17 +285,17 @@
                     :width="colWidth(cell)"
                 >
                     <v-checkbox
-                        @change="onChangeCell($event, item.id, cell)"
+                        @change="onChangeCell($event, item, cell)"
                         v-if="dataType(cell) === 'delete'"
                         :disabled="item.id < 0"
                     ></v-checkbox>
                     <v-checkbox
-                        @change="onChangeCell($event, item.id, cell)"
+                        @change="onChangeCell($event, item, cell)"
                         v-model="item[cell]"
                         v-else-if="dataType(cell) === 'check'"
                     ></v-checkbox>
                     <v-text-field
-                        @input="onChangeCell($event, item.id, cell)"
+                        @input="onChangeCell($event, item, cell)"
                         :value="item[cell]"
                         v-else-if="edited(item,cell) && dataType(cell) === 'text'"
                         dense single-line
@@ -305,7 +305,7 @@
                     >
                     </v-text-field>
                     <v-text-field
-                        @input="onChangeCell($event, item.id, cell)"
+                        @input="onChangeCell($event, item, cell)"
                         :value="item[cell]"
                         v-else-if="edited(item,cell) && dataType(cell) === 'number'"
                         dense single-line
@@ -320,7 +320,7 @@
                         :ref="cell"
                         v-else-if="edited(item,cell) && dataType(cell) === 'telephone'"
                         dense single-line
-                        @input="onChangeCell($event, item.id, cell)"
+                        @input="onChangeCell($event, item, cell)"
                         :options="{
                             inputMask: '(###) #######',
                             outputMask: '##########',
@@ -333,7 +333,7 @@
                     >
                     </simple-mask>
                     <v-text-field
-                        @input="onChangeCell($event, item.id, cell)"
+                        @input="onChangeCell($event, item, cell)"
                         :value="item[cell]"
                         v-else-if="edited(item,cell) && dataType(cell) === 'email'"
                         dense single-line
@@ -361,12 +361,12 @@
                             locale="es-mx"
                             no-title
                             :value="item[cell]"
-                            @change="onChangeCell($event, item.id, cell)"
+                            @change="onChangeCell($event, item, cell)"
                         >
                         </v-date-picker>
                     </v-menu>
                     <v-select
-                        @change="onChangeCell($event, item.id, cell)"
+                        @change="onChangeCell($event, item, cell)"
                         v-else-if="edited(item,cell) && dataType(cell) === 'combo'"
                         :items="combos[cell]"
                         :value="item[cell]"
@@ -383,7 +383,7 @@
                     </span>
                     <span
                         v-else
-                        @click="onEditRow($event, item.id, cell)"
+                        @click="onEditRow($event, item, cell)"
                     >
                         {{cellData(cell, item[cell], dataType(cell))}}
                     </span>
@@ -401,15 +401,15 @@
                     </div>
                     <div class="v-data-table__mobile-row__cell" style="float:rigth">
                         <v-checkbox
-                            @change="onChangeCell($event, item.id, cell)"
+                            @change="onChangeCell($event, item, cell)"
                             v-if="dataType(cell) === 'delete'"
                         ></v-checkbox>
                         <v-checkbox
-                            @change="onChangeCell($event, item.id, cell)"
+                            @change="onChangeCell($event, item, cell)"
                             v-else-if="dataType(cell) === 'check'"
                         ></v-checkbox>
                         <v-text-field
-                            @change="onChangeCell($event, item.id, cell)"
+                            @change="onChangeCell($event, item, cell)"
                             :value="item[cell]"
                             v-else-if="edited(item,cell) && dataType(cell) === 'text'"
                             dense single-line
@@ -421,7 +421,7 @@
                             :ref="cell"
                             v-else-if="edited(item,cell) && dataType(cell) === 'telephone'"
                             dense single-line
-                            @input="onChangeCell($event, item.id, cell)"
+                            @input="onChangeCell($event, item, cell)"
                             :options="{
                                 inputMask: '(###) #######',
                                 outputMask: '##########',
@@ -433,7 +433,7 @@
                         >
                         </v-text-field-simplemask>
                         <v-text-field
-                            @change="onChangeCell($event, item.id, cell)"
+                            @change="onChangeCell($event, item, cell)"
                             :value="item[cell]"
                             v-else-if="edited(item,cell) && dataType(cell) === 'email'"
                             dense single-line
@@ -441,7 +441,7 @@
                         >
                         </v-text-field>
                         <v-text-field
-                            @change="onChangeCell($event, item.id, cell)"
+                            @change="onChangeCell($event, item, cell)"
                             :value="item[cell]"
                             v-else-if="edited(item,cell) && dataType(cell) === 'date'"
                             dense single-line
@@ -450,7 +450,7 @@
                         >
                         </v-text-field>
                         <v-select
-                            @change="onChangeCell($event, item.id, cell)"
+                            @change="onChangeCell($event, item, cell)"
                             v-else-if="edited(item,cell) && dataType(cell) === 'combo'"
                             :items="combos[cell]"
                             :value="item[cell]"
@@ -460,7 +460,7 @@
                         ></v-select>
                         <span
                             v-else
-                            @click="onEditRow($event, item.id, cell)"
+                            @click="onEditRow($event, item, cell)"
                             style="max-width: 150px;"
                         >
                             {{cellData(cell, item[cell], dataType(cell))}}
@@ -480,7 +480,7 @@
         components: {
             SimpleMask
         },
-        props: ['headerProp', 'dataProp', 'comboProp'],
+        props: ['headerProp', 'dataProp', 'comboProp', 'keyProp'],
         data: () => ({
             headers: [],
             items: [],
@@ -497,22 +497,24 @@
             isAddedData: false
         }),
         methods: {
-            onChangeCell(val, rowId, cell){
-                const index = this.itemsEdit.findIndex(item => item.id === rowId);
-                if(index !== -1) this.itemsEdit[index][cell] = val;
+            onChangeCell($event, item, cell){
+                const rowId = item[this.keyProp];
+                const index = this.itemsEdit.findIndex(item => item[this.keyProp] === rowId);
+                if(index !== -1) this.itemsEdit[index][cell] = $event;
                 else{
-                    const row = this.items.find(item => item.id === rowId);
-                    row[cell] = val;
+                    const row = this.items.find(item => item[this.keyProp] === rowId);
+                    row[cell] = $event;
                     this.itemsEdit.push(row);
                 }
             },
-            onEditRow(event, rowId, cell){
-                const index = this.items.findIndex(item => item.id === rowId);
+            onEditRow($event, item, cell){
+                const rowId = item[this.keyProp];
+                const index = this.items.findIndex(item => item[this.keyProp] === rowId);
                 let headerIndex = this.headers.map(item => item.value).indexOf(cell);
                 if(!this.headerProp[headerIndex].editable) return;
                 if(!this.items[index].edit.includes(cell)) this.items[index].edit.push(cell);
             },
-            onClickLink(event, href){
+            onClickLink($event, href){
                 window.open(href);
             },
             colWidth(cell){
@@ -548,6 +550,9 @@
                         else return false;
                     }
                     this.itemsFilter = this.items.filter(item => dateFilter(item[col], val));
+                }else if (dataType === 'check'){
+                    this.headers[index].filter = val;
+                    this.itemsFilter = this.items.filter(item => item[col] === val);
                 }else{
                     this.headers[index].filter = val;
                     this.itemsFilter = this.items.filter(item => (item[col] + '').toLowerCase().includes((val + '').toLowerCase()));
