@@ -31,4 +31,5 @@ import vgrid from '../../components/Grid.vue';
     }
 </script>
 <style scoped>
+#link:hover {cursor: pointer;}
 </style>

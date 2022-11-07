@@ -635,11 +635,10 @@
 
                 }
                 this.isAddedData = true;
-                this.items.push(emptyLine);
+                this.items.unshift(emptyLine);
             },
             refresh(){
                 this.items = this.itemsData.map(item => {return {...item}});
-                this.items = this.items.filter(item => item.id > 0);
                 this.items.forEach(item => item.edit = []);
                 this.isAddedData = false;
                 this.itemsEdit = [];
@@ -764,5 +763,6 @@
     }
     #link:hover{
         text-decoration: underline;
+        cursor: pointer;
     }      
 </style>
