@@ -5,6 +5,7 @@
         class="elevation-1" 
         height="450px"
         :mobile-breakpoint='null'
+        :items-per-page=-1
     >
         <template #header :headers="headers">
             <thead v-if="!isMobile()">
