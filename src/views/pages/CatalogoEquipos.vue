@@ -15,7 +15,7 @@
             <v-col cols="12">
             <Grid
               :header-prop="gridHeader"
-              :data-prop="gridData"
+              :data-sel-prop="gridDataSel"
               :combo-prop="gridCombo"
               :key-prop="gridKey"
               ></Grid>
@@ -75,15 +75,17 @@
           valMsg: 'Este campo es requerido',
           color: '#03A9F4',
           gridHeader: [
-            {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: false},
-            {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'number', editable: false},
-            {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true},
-            {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check', editable: true},
-            {text: 'Jugadores', value: 'Jugadores', sortable: false, width: '150px', type: 'link', editable: true}
+            {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
+            {text: 'IdTorneo', value: 'IdTorneo', sortable: false, width: '150px', type: 'number', editable: true, ui: true, visible: true},
+            {text: 'IdEquipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'number', editable: true, ui: true, visible: true},
+            {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true, ui: false, visible: true},
+            {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check', editable: true, ui: false, visible: true},
+            {text: 'Jugadores', value: 'Jugadores', sortable: false, width: '150px', type: 'link', editable: true, ui: false, visible: true}
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
-          gridData: 'BuscarEquipos',
-          gridKey: 'IdEquipo'
+          gridDataSel: 'BuscarEquipos',
+          gridDataUi: 'GuardaEquipo',
+          gridKey: ['IdLiga','IdTorneo','IdEquipo']
       }
     },
     computed: {

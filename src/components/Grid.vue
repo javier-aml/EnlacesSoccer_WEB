@@ -192,7 +192,7 @@
                 <tr v-if="isMobile() && item.id <= 1 && mobileFilter">
                     <td
                         class="v-data-table__mobile-row"
-                        v-for="header in headers" 
+                        v-for="header in headers.filter(header => header.visible)" 
                         :key="header.id"
                         style="background: #dcdcdc"
                     >
@@ -474,14 +474,13 @@
     </v-data-table>
 </template>
 <script>
-    import { it } from 'vuetify/lib/locale';
     import SimpleMask from '../components/SimpleMask.vue'
     import axios from 'axios'
     export default{
         components: {
             SimpleMask
         },
-        props: ['headerProp', 'dataProp', 'comboProp', 'keyProp'],
+        props: ['headerProp', 'dataSelProp', 'dataUiProp', 'comboProp', 'keyProp'],
         data: () => ({
             headers: [],
             items: [],
@@ -499,18 +498,19 @@
         }),
         methods: {
             onChangeCell($event, item, cell){
-                const rowId = item[this.keyProp];
-                const index = this.itemsEdit.findIndex(item => item[this.keyProp] === rowId);
+                const rowId = item.rowIndex;
+                const index = this.itemsEdit.findIndex(item => item.rowIndex === rowId);
                 if(index !== -1) this.itemsEdit[index][cell] = $event;
                 else{
-                    const row = this.items.find(item => item[this.keyProp] === rowId);
+                    const row = this.items.find(item => item.rowIndex === rowId);
                     row[cell] = $event;
                     this.itemsEdit.push(row);
                 }
             },
             onEditRow($event, item, cell){
-                const rowId = item[this.keyProp];
-                const index = this.items.findIndex(item => item[this.keyProp] === rowId);
+                if(this.keyProp.includes(cell)) return;
+                const rowId = item.rowIndex;
+                const index = this.items.findIndex(item => item.rowIndex === rowId);
                 let headerIndex = this.headers.map(item => item.value).indexOf(cell);
                 if(!this.headerProp[headerIndex].editable) return;
                 if(!this.items[index].edit.includes(cell)) this.items[index].edit.push(cell);
@@ -631,9 +631,10 @@
                     }else if(item.type === 'combo') {
                         emptyLine[item.value] = this.combos.hasOwnProperty(item.value) ? this.combos.defaults[item.value] : '-';
                         emptyLine.edit.push(item.value);
-                    }else if(item.type === 'check') emptyLine[item.value] = false;
+                    }
+                    else if(item.type === 'check') emptyLine[item.value] = false;
                     else if(item.type === 'delete') emptyLine[item.value] = false;
-
+                    
                 }
                 this.isAddedData = true;
                 this.items.unshift(emptyLine);
@@ -653,16 +654,20 @@
                 let gridData = this.itemsEdit.map(item => {
                     const row = {...item};
                     delete row.edit;
+                    delete row.rowIndex;
+                    this.headerProp.forEach(header => {
+                        if(!header.ui) delete row[header.value];
+                    });
                     return row;
                 });
                 gridData = JSON.stringify(gridData);
                 let apiReq = process.env.VUE_APP_API_URL + '/GuardarGrid'; 
                 apiReq = await axios.post(apiReq, {
                     data:{
-                        psSpUI: this.dataProp,
+                        psSpUI: this.dataUiProp,
                         psData: gridData
                 }}, { 'Access-Control-Allow-Origin': '*' }); 
-                await parseData();              
+                await this.parseData();
             },
             async parseData(){
                 this.headers = [];
@@ -678,20 +683,17 @@
                         filter: item.type === 'date' ? {from: null, to: null} : null
                     });
                 }
+                this.headers.push({text: 'Index', value: 'rowIndex', sortable: false, width: '150px', type: 'text', filter: null});
                 this.headers.push({text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null});
-                const tableFieldsArr = [];
-                let tableFields = '';
-                for(let item of this.headerProp){
-                    if(item.value === 'delete') continue
-                    else tableFieldsArr.push(item.value);
-                }
-                tableFields = tableFieldsArr.join(',');
-                const apiReq = process.env.VUE_APP_API_URL + '/ConsultarGrid?psSpSel=' + this.dataProp; 
+                const apiReq = process.env.VUE_APP_API_URL + '/ConsultarGrid?psSpSel=' + this.dataSelProp; 
                 let griData = await axios.get(apiReq, {}, { 'Access-Control-Allow-Origin': '*' });
                 griData = griData.data;
+                let indexKey = '';
                 for(let item of griData){
-                    this.items.push({...item, delete: false, edit: []});
-                    this.itemsData.push({...item, delete: false, edit: []});
+                    indexKey = '';
+                    this.keyProp.forEach(index => indexKey += ((indexKey === '' ? '' : '|') + item[index]));
+                    this.items.push({...item, rowIndex: indexKey, delete: false, edit: []});
+                    this.itemsData.push({...item, rowIndex: indexKey, delete: false, edit: []});
                 }
                 for(let item of this.comboProp){
                     await this.$store.dispatch(item.data);
