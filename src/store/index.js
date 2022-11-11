@@ -82,7 +82,7 @@ const actions = {
   },
   async getLigas({commit}) {
     try {
-      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarLigas?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarLigas?pnIdLiga=1,pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_LIGAS', response.data);
     } catch (error) {
       return console.log(error);
@@ -140,6 +140,7 @@ const actions = {
       const data = {
         data: {
           pnIdLiga: payload.Idliga,
+          pnIdTorneo: payload.IdTorneo,
           psNombre: payload.Nombre,
           pnActivo: 1,          
           psNombrePcMod: 'TEST_Artur',
