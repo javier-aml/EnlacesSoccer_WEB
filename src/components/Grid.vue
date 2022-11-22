@@ -653,20 +653,36 @@
             async onSave(){
                 let gridData = this.itemsEdit.map(item => {
                     const row = {...item};
+                    const rowSave = {};
                     delete row.edit;
                     delete row.rowIndex;
                     this.headerProp.forEach(header => {
                         if(!header.ui) delete row[header.value];
+                        for(let key of Object.keys(row)){
+                            if(key === header.value){
+                                if(header.type === 'number') rowSave['pn' + key] = row[key];
+                                else if(header.type === 'combo') rowSave['pn' + key] = row[key];
+                                else if(header.type === 'text') rowSave['ps' + key] = row[key];
+                                else if(header.type === 'date') rowSave['pd' + key] = row[key];
+                                else if(header.type === 'check') rowSave['pn' + key] = row[key];
+                                else if(header.type === 'email') rowSave['ps' + key] = row[key];
+                                else if(header.type === 'telephone') rowSave['pn' + key] = row[key];
+                                else if(header.type === 'delete') rowSave['pn' + key] = row[key];
+                            }
+                        }
                     });
-                    return row;
+                    return rowSave;
                 });
                 gridData = JSON.stringify(gridData);
+                console.log(gridData);
+                console.log(this.dataUiProp);
                 let apiReq = process.env.VUE_APP_API_URL + '/GuardarGrid'; 
                 apiReq = await axios.post(apiReq, {
                     data:{
                         psSpUI: this.dataUiProp,
                         psData: gridData
                 }}, { 'Access-Control-Allow-Origin': '*' }); 
+                console.log(apiReq);
                 await this.parseData();
             },
             async parseData(){
