@@ -16,6 +16,7 @@
             <Grid
               :header-prop="gridHeader"
               :data-sel-prop="gridDataSel"
+              :data-ui-prop="gridDataUi"
               :combo-prop="gridCombo"
               :key-prop="gridKey"
               ></Grid>
@@ -83,7 +84,7 @@
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1},{name: 'IdTorneo', data: 'getTorneos', default: 1}],
           gridDataSel: 'BuscarEquipos',
-          gridDataUi: 'GuardaEquipo',
+          gridDataUi: 'GuardaGridPruebaProc',
           gridKey: ['IdLiga','IdTorneo','IdEquipo']
       }
     },
