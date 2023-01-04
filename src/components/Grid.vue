@@ -703,6 +703,7 @@
                         let keys = Object.keys(item);
                         storeData.push({Id: item[keys[0]], Nom: item[keys[1]]});
                     }
+                    console.log(storeData);
                     const comboNull = {[item.name]: storeData, ...this.combos}
                     this.combos = comboNull
                     this.combos.defaults = {[item.name]: item.default, ...this.combos.defaults};

@@ -77,8 +77,8 @@
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
             {text: 'Torneo', value: 'IdTorneo', sortable: true, width: '150px', type: 'combo', editable: false, ui: true, visible: true},
             {text: 'Equipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'number', editable: true, ui: true, visible: true},
-            {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true, ui: false, visible: true},
-            {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check', editable: true, ui: false, visible: true},
+            {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true, ui: true, visible: true},
+            {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check', editable: true, ui: true, visible: true},
             {text: 'Jugadores', value: 'Jugadores', sortable: false, width: '150px', type: 'link', editable: true, ui: false, visible: true}
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1},{name: 'IdTorneo', data: 'getTorneos', default: 1}],
@@ -96,11 +96,14 @@
         }
         return dataArr;
       },
+
+      
       torneos() {
+        if(this.Idliga === null) return [];
         const data = this.$store.state.torneos;
         const dataArr = [];
         for(let item of data){
-          dataArr.push(item);
+          if(item.Idliga === this.Idliga) dataArr.push(item);
         }
         return dataArr;
       },

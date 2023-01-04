@@ -82,7 +82,7 @@ const actions = {
   },
   async getLigas({commit}) {
     try {
-      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarLigas?pnIdLiga=1,pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarLigas?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_LIGAS', response.data);
     } catch (error) {
       return console.log(error);
@@ -90,6 +90,7 @@ const actions = {
   },
   async getTorneos({commit}) {
     try {
+      //const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarTorneos?pnIdLiga=1&pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarTorneos?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_TORNEOS', response.data);
     } catch (error) {
@@ -106,7 +107,7 @@ const actions = {
   },
   async postGuardaLiga({commit}, payload) {
     try {
-      const url = process.env.VUE_APP_API_URL + '/GuardarLiga';
+      const url = process.env.VUE_APP_API_URL + '/RegistroLiga';
       const data = {
         data: {
           sNombre: payload.Nombre,

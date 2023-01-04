@@ -60,9 +60,9 @@ const routes = [
     },
   },
   {
-    path: '/pages/guardar-liga',
-    name: 'guardar-liga',
-    component: () => import('@/views/pages/GuardarLiga.vue'),
+    path: '/pages/registro-liga',
+    name: 'registro-liga',
+    component: () => import('@/views/pages/RegistroLiga.vue'),
     meta: {
       layout: 'blank',
     },

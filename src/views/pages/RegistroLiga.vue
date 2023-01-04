@@ -81,7 +81,7 @@
                 outlined
                 label="País"
                 :items="paises"
-                item-text="NombrePais"
+                item-text="Nombre"
                 item-value="IdPais"
               ></v-select>
             </v-col>
