@@ -671,6 +671,7 @@
                             }
                         }
                     });
+                    console.log(rowSave);
                     return rowSave;
                 });
                 gridData = JSON.stringify(gridData);

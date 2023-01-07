@@ -29,7 +29,7 @@
                 :disabled="habilitaGuardar"
                 @click.prevent="guardaEquipo"
               >
-                Guardar
+                Guardarr
               </v-btn>
             </v-col>
           </v-row>
@@ -76,7 +76,7 @@
           color: '#03A9F4',
           gridHeader: [
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
-            {text: 'Torneo', value: 'IdTorneo', sortable: true, width: '150px', type: 'combo', editable: false, ui: true, visible: true},
+            {text: 'Torneo', value: 'IdTorneo', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
             {text: 'Equipo', value: 'IdEquipo', sortable: false, width: '150px', type: 'number', editable: true, ui: true, visible: true},
             {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check', editable: true, ui: true, visible: true},
@@ -84,7 +84,7 @@
           ],
           gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1},{name: 'IdTorneo', data: 'getTorneos', default: 1}],
           gridDataSel: 'BuscarEquipos',
-          gridDataUi: 'GuardaGridPruebaProc',
+          gridDataUi: 'GuardarEquipo',
           gridKey: ['IdLiga','IdTorneo','IdEquipo']
       }
     },
