@@ -74,14 +74,19 @@
           valMsg: 'Este campo es requerido',
           color: '#03A9F4',
           gridHeader: [
-            {text: 'Liga', value: 'IdLiga', sortable: true, width: '250px', type: 'combo'},
-            {text: 'IdArbitro', value: 'IdArbitro', sortable: false, width: '50px', type: 'number'},
-            {text: 'Nombre', value: 'Nombre', sortable: false, width: '500px', type: 'text'},
-            {text: 'Telefono', value: 'Telefono', sortable: false, width: '50px', type: 'text'},
-            {text: 'Juegos', value: 'JuegosArbitrados', sortable: false, width: '50px', type: 'number'},
-            {text: 'Activo', value: 'Activo', sortable: false, width: '50px', type: 'check'}
+            {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
+            {text: 'Torneo', value: 'IdTorneo', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
+            {text: 'IdEquipo', value: 'IdEquipo', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
+            {text: 'IdJugador', value: 'IdJugador', sortable: false, width: '50px', type: 'number', editable: true, ui: true, visible: true},
+            {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true, ui: true, visible: true},
+            {text: 'Telefono', value: 'Telefono', sortable: false, width: '50px', type: 'text', editable: true, ui: true, visible: true},
+            {text: 'Fotografía', value: 'Fotografia', sortable: false, width: '50px', type: 'link', editable: true, ui: true, visible: true},
+            {text: 'Activo', value: 'Activo', sortable: false, width: '50px', type: 'check', editable: true, ui: true, visible: true}
           ],
-          gridData: 'JugadorEquipo'
+          gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1},{name: 'IdTorneo', data: 'getTorneos', default: 1},{name: 'IdEquipo', data: 'getEquipos', default: 1}],
+          gridDataSel: 'BuscarJugadores',
+          gridDataUi: 'GuardarJugador',
+          gridKey: ['IdLiga','IdTorneo','IdEquipo','IdJugador']
       }
     },
     computed: {
@@ -115,8 +120,8 @@
       }
     },
     methods: {
-      async guardarArbitro() {
-        const data = await this.$store.dispatch('postGuardarArbitro', {
+      async guardarJugadorEquipo() {
+        const data = await this.$store.dispatch('postGuardarJugadorEquipo', {
           IdLiga: this.IdLiga,
           Nombre: this.Nombre
         });
