@@ -159,6 +159,33 @@ const actions = {
     } catch (error) {
       return console.log(error);
     }
+  },
+  async postGuardarJugador({commit}, payload) {
+    try {
+      const url = process.env.VUE_APP_API_URL + '/GuardarJugador';
+      const data = {
+        data: {
+          pnIdLiga: payload.Idliga,
+          pnIdTorneo: payload.IdTorneo,
+          pnIdEquipo: payload.IdEquipo,
+          psNombre: payload.Nombre,
+          psTelefono: payload.Telefono,
+          pnActivo: 1,          
+          psNombrePcMod: 'TEST_Artur',
+          pnClaUsuarioMod: 1
+        }
+      };
+      console.log(data);
+      const config = {
+        headers: {
+          'content-type': 'application/json; charset=utf-8'
+        }
+      };
+      await axios.post(url, data, config);
+      return 1;
+    } catch (error) {
+      return console.log(error);
+    }
   }
 }
 
