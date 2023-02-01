@@ -586,12 +586,10 @@ export default {
             }
           }
         })
-        console.log(rowSave)
         return rowSave
       })
       gridData = JSON.stringify(gridData)
-      console.log(gridData)
-      console.log(this.dataUiProp)
+      console.log(gridData) //IMPRIME DATOS A GUARDAR
       let apiReq = process.env.VUE_APP_API_URL + '/GuardarGrid'
       apiReq = await axios.post(
         apiReq,
@@ -603,7 +601,6 @@ export default {
         },
         { 'Access-Control-Allow-Origin': '*' },
       )
-      console.log(apiReq)
       await this.parseData()
     },
     async parseData() {
@@ -647,7 +644,6 @@ export default {
           let keys = Object.keys(item)
           storeData.push({ Id: item[keys[0]], Nom: item[keys[1]] })
         }
-        console.log(storeData)
         const comboNull = { [item.name]: storeData, ...this.combos }
         this.combos = comboNull
         this.combos.defaults = { [item.name]: item.default, ...this.combos.defaults }
