@@ -21,42 +21,9 @@
               :key-prop="gridKey"
               ></Grid>
             </v-col>
-
-            <v-col cols="12">
-              <v-btn
-                :color="color"
-                class="me-3 mt-4"
-                :disabled="habilitaGuardar"
-                @click.prevent="guardaEquipo"
-              >
-                Guardarr
-              </v-btn>
-            </v-col>
           </v-row>
         </v-form>
       </v-card-text>
-    </v-card>
-
-    <v-card
-      style="margin-left:auto; margin-right:auto; margin-top: 10%;"
-      width="500px"
-      height="200px"
-
-      v-show="esGuardado"
-    >
-      <v-card-title
-        style="padding-top:50px"
-        class="justify-center"
-      >
-        El equipo fue registrado correctamente.
-      </v-card-title>
-      <v-btn
-        :color="color"
-        style="margin-left:190px; margin-right:auto; margin-top: 10px;"
-        @click.prevent="confirmaGuardar"
-      >
-        Aceptar
-      </v-btn>
     </v-card>
   </span>
 </template>
@@ -98,7 +65,6 @@
         return dataArr;
       },
 
-      
       torneos() {
         if(this.Idliga === null) return [];
         const data = this.$store.state.torneos;
@@ -108,24 +74,6 @@
         }
         return dataArr;
       },
-      habilitaGuardar() {
-        if(this.Nombre && this.Idliga && this.IdTorneo) return false;
-        else return true;
-      }
-    },
-    methods: {
-      async guardarEquipo() {
-        const data = await this.$store.dispatch('postGuardarEquipo', {
-          IdLiga: this.IdLiga,
-          IdTorneo: this.IdTorneo,
-          Nombre: this.Nombre
-        });
-        this.esGuardado = data === 1 ? true : false;
-      },
-      confirmaGuardar(){
-        this.$refs.forma.reset();
-        this.esGuardado = false;
-      }
     },
     async mounted() {
       await this.$store.dispatch('getLigas');
