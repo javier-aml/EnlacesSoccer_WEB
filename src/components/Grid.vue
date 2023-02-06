@@ -18,7 +18,7 @@
                   <v-btn icon v-bind="attrs" @click.prevent="refresh" v-if="header.type === 'add'" :disabled="isReset">
                     <v-icon>mdi-refresh</v-icon>
                   </v-btn>
-                  <v-btn icon v-bind="attrs" v-if="header.type === 'add'" :disabled="isSave" @click.prevent="onSave">
+                  <v-btn icon v-bind="attrs" v-if="header.type === 'add'" @click.prevent="onSave">
                     <v-icon>mdi-content-save</v-icon>
                   </v-btn>
                   <v-btn icon v-bind="attrs" @click.prevent="addLine" v-if="header.type === 'add'">
@@ -583,7 +583,7 @@ export default {
           if (!header.ui) delete row[header.value]
           for (let key of Object.keys(row)) {
             if (key === header.value) {
-              if (header.type === 'number') rowSave['pn' + key] = row[key]
+              if (header.type === 'number') rowSave['pn' + key] = row[key] ? row[key] : "'" + row[key] + "'" 
               else if (header.type === 'combo') rowSave['pn' + key] = row[key]
               else if (header.type === 'text') rowSave['ps' + key] = "'" + row[key] + "'"
               else if (header.type === 'date') rowSave['pd' + key] = row[key]
