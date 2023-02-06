@@ -51,7 +51,7 @@
             {text: 'Equipo', value: 'IdEquipo', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
             {text: 'IdJugador', value: 'IdJugador', sortable: false, width: '50px', type: 'number', editable: true, ui: true, visible: true},
             {text: 'Nombre', value: 'Nombre', sortable: false, width: '150px', type: 'text', editable: true, ui: true, visible: true},
-            //{text: 'NumeroJugador', value: 'NumeroJugador', sortable: false, width: '150px', type: 'number', editable: true, ui: true, visible: true},
+            {text: 'NumeroJugador', value: 'NumeroJugador', sortable: false, width: '150px', type: 'number', editable: true, ui: true, visible: true},
             {text: 'Telefono', value: 'Telefono', sortable: false, width: '50px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Fotografía', value: 'Fotografia', sortable: false, width: '50px', type: 'link', editable: true, ui: true, visible: true},
             {text: 'Activo', value: 'Activo', sortable: false, width: '50px', type: 'check', editable: true, ui: true, visible: true}
