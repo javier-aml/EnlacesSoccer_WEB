@@ -5,7 +5,7 @@
     class="elevation-1"
     height="450px"
     :mobile-breakpoint="null"
-    :items-per-page="-1"
+    :footer-props="{'items-per-page-options':[15, 30, 50, 100, -1]}"
   >
     <template #header :headers="headers">
       <thead v-if="!isMobile()">
@@ -530,7 +530,6 @@ export default {
       idIndex = idIndex[0].id ? idIndex[0].id - 1 : -1;
       const emptyLine = { id: idIndex, edit: [] }
       for (let item of this.headers) {
-        console.log(item);
         if (item.editable === false){  
           emptyLine[item.value] = ''
         }
@@ -594,6 +593,7 @@ export default {
             }
           }
         })
+        rowSave['pnAccion'] = item.id < 0 ? 1 : 2;
         return rowSave
       })
       gridData = JSON.stringify(gridData)
