@@ -597,6 +597,7 @@ export default {
         return rowSave
       })
       gridData = JSON.stringify(gridData)
+      this.itemsEdit = [];
       console.log(gridData) //IMPRIME DATOS A GUARDAR
       let apiReq = process.env.VUE_APP_API_URL + '/GuardarGrid'
       apiReq = await axios.post(
