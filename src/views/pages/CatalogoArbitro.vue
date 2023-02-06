@@ -43,7 +43,7 @@
           color: '#03A9F4',
           gridHeader: [
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
-            {text: 'IdArbitro', value: 'IdArbitro', sortable: true, width: '50px', type: 'number', editable: true, ui: true, visible: true},
+            {text: 'IdArbitro', value: 'IdArbitro', sortable: true, width: '50px', type: 'number', editable: false, ui: true, visible: true},
             {text: 'Nombre', value: 'Nombre', sortable: false, width: '250px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Telefono', value: 'Telefono', sortable: false, width: '50px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Juegos', value: 'JuegosArbitrados', sortable: true, width: '50px', type: 'number', editable: true, ui: true, visible: true},

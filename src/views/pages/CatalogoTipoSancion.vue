@@ -42,7 +42,7 @@
           color: '#03A9F4',
           gridHeader: [
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
-            {text: 'IdTipoSancion', value: 'IdTipoSancion', sortable: true, width: '100px', type: 'number', editable: true, ui: true, visible: true},
+            {text: 'IdTipoSancion', value: 'IdTipoSancion', sortable: true, width: '100px', type: 'number', editable: false, ui: true, visible: true},
             {text: 'Clave', value: 'Clave', sortable: false, width: '150px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Descripción', value: 'Descripcion', sortable: false, width: '500px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Juegos', value: 'JuegosSuspension', sortable: true, width: '100px', type: 'number', editable: true, ui: true, visible: true},
