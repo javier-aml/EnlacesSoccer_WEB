@@ -10,7 +10,7 @@
     <template #header :headers="headers">
       <thead v-if="!isMobile()">
         <tr>
-          <th v-for="header in headers" :key="header.value">
+          <th v-for="header in headers.filter(header => header.visible !== false)" :key="header.value">
             <span>
               <v-menu offset-y :close-on-content-click="false">
                 <template v-slot:activator="{ on, attrs }">
@@ -302,7 +302,10 @@
           >
             {{ cellData(cell, item[cell], dataType(cell), 1) }}
           </span>
-          <span v-else @click="onEditRow($event, item, cell)">
+          <span 
+            v-else-if="dataType(cell) !== 'index'"
+            @click="onEditRow($event, item, cell)"
+          >
             {{ cellData(cell, item[cell], dataType(cell)) }}
           </span>
         </td>
@@ -409,8 +412,8 @@ export default {
     isAddedData: false,
   }),
   methods: {
-    onChangeCell($event, item, cell) {
-      const rowId = item.rowIndex
+    onChangeCell($event, item, cell) { 
+      const rowId = item.rowIndex;
       const index = this.itemsEdit.findIndex(item => item.rowIndex === rowId)
       if (index !== -1) this.itemsEdit[index][cell] = $event
       else {
@@ -419,7 +422,7 @@ export default {
         this.itemsEdit.push(row)
       }
     },
-    onEditRow($event, item, cell) {
+    onEditRow($event, item, cell) {      
       if (this.keyProp.includes(cell)) return
       const rowId = item.rowIndex
       const index = this.items.findIndex(item => item.rowIndex === rowId)
@@ -523,12 +526,15 @@ export default {
       return result
     },
     addLine() {
-      const idIndex = this.items.length
-        ? this.items[this.items.length - 1].id + (this.items[this.items.length - 1].id > 0 ? 1 : -1)
-        : 1
-      const emptyLine = { id: idIndex * (idIndex > 0 ? -1 : 1), edit: [] }
+      let idIndex = this.items.sort((a, b) => {return a.id - b.id});
+      idIndex = idIndex[0].id ? idIndex[0].id - 1 : -1;
+      const emptyLine = { id: idIndex, edit: [] }
       for (let item of this.headers) {
-        if (item.type === 'text') {
+        console.log(item);
+        if (item.editable === false){  
+          emptyLine[item.value] = ''
+        }
+        else if (item.type === 'text') {
           emptyLine[item.value] = ''
           emptyLine.edit.push(item.value)
         } else if (item.type === 'number') {
@@ -547,9 +553,11 @@ export default {
           emptyLine[item.value] = this.combos.hasOwnProperty(item.value) ? this.combos.defaults[item.value] : '-'
           emptyLine.edit.push(item.value)
         } else if (item.type === 'check') emptyLine[item.value] = false
+        else if (item.type === 'link') emptyLine[item.value] = null
         else if (item.type === 'delete') emptyLine[item.value] = false
       }
       this.isAddedData = true
+      emptyLine['rowIndex'] = '' + idIndex;
       this.items.unshift(emptyLine)
     },
     refresh() {
@@ -614,6 +622,9 @@ export default {
           sortable: false,
           width: item.width,
           type: item.type,
+          editable: item.editable,
+          ui: item.ui,
+          visible: item.visible,
           filter: item.type === 'date' ? { from: null, to: null } : null,
         })
       }
@@ -622,7 +633,10 @@ export default {
         value: 'rowIndex',
         sortable: false,
         width: '150px',
-        type: 'text',
+        type: 'index',
+        editable: false,
+        ui: false,
+        visible: false,
         filter: null,
       })
       this.headers.push({ text: '', value: 'agregar', sortable: false, width: '50px', type: 'add', filter: null })
