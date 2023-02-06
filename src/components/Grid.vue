@@ -482,6 +482,15 @@ export default {
       } else this.headers[index].filter = ''
       this.itemsFilter = []
     },
+    clearAllFilters() {
+      for(let index in this.headers){
+        if (this.headers[index].type === 'date') {
+          this.headers[index].filter.from = ''
+          this.headers[index].filter.to = ''
+        } else this.headers[index].filter = ''
+        this.itemsFilter = []
+      }
+    },
     isMobile() {
       return window.innerWidth < 600 ? true : false
     },
@@ -526,6 +535,7 @@ export default {
       return result
     },
     addLine() {
+      this.clearAllFilters();
       let idIndex = this.items.sort((a, b) => {return a.id - b.id});
       idIndex = idIndex[0].id ? idIndex[0].id - 1 : -1;
       const emptyLine = { id: idIndex, edit: [] }
