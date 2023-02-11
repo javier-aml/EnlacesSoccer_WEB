@@ -29,6 +29,9 @@ const getters = {
   items: torneos => {
     return torneos.Nombre;
   },
+  items: tiposdetorneo => {
+    return tiposdetorneo.Nombre;
+  },
   items: equipos => {
     return equipos.Nombre;
   }
@@ -48,6 +51,9 @@ const mutations = {
     state.ligas = items
   },
   SET_TORNEOS(state, items) {
+    state.torneos = items
+  },
+  SET_TIPOSDETORNEO(state, items) {
     state.torneos = items
   },
   SET_EQUIPOS(state, items) {
@@ -93,6 +99,14 @@ const actions = {
       //const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarTorneos?pnIdLiga=1&pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarTorneos?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_TORNEOS', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+  async getTiposDeTorneo({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarTiposDeTorneo?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_TIPOSDETORNEO', response.data);
     } catch (error) {
       return console.log(error);
     }

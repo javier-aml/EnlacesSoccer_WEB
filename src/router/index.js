@@ -76,6 +76,14 @@ const routes = [
     },
   },
   {
+    path: '/pages/configura-torneos',
+    name: 'configura-configura',
+    component: () => import('@/views/pages/ConfiguraTorneos.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/pages/Catalogo-equipos',
     name: 'catalogo-equipos',
     component: () => import('@/views/pages/CatalogoEquipos.vue'),
