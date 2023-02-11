@@ -68,6 +68,14 @@ const routes = [
     },
   },
   {
+    path: '/pages/catalogo-ligas',
+    name: 'catalogo-ligas',
+    component: () => import('@/views/pages/CatalogoLigas.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/pages/Catalogo-equipos',
     name: 'catalogo-equipos',
     component: () => import('@/views/pages/CatalogoEquipos.vue'),
