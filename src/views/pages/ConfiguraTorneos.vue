@@ -48,6 +48,7 @@
           gridHeader: [
             
             {text: 'Liga', value: 'IdLiga', sortable: true, width: '150px', type: 'combo', editable: true, ui: true, visible: true},
+            {text: 'IdTorneo', value: 'IdTorneo', sortable: false, width: '150px', type: 'number', editable: false, ui: true, visible: true},
             {text: 'Torneo', value: 'Nombre', sortable: false, width: '200px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Tipo', value: 'IdTipoTorneo', sortable: true, width: '50px', type: 'combo', editable: true, ui: true, visible: true},
             {text: 'Dias', value: 'IdDia', sortable: true, width: '50px', type: 'combo', editable: true, ui: true, visible: true},

@@ -10,7 +10,8 @@ const state = {
   municipios: [],
   ligas: [],
   torneos: [],
-  equipos: []
+  equipos: [],
+  tiposdetorneo: []
 }
 
 const getters = {
@@ -54,7 +55,7 @@ const mutations = {
     state.torneos = items
   },
   SET_TIPOSDETORNEO(state, items) {
-    state.torneos = items
+    state.tiposdetorneo = items
   },
   SET_EQUIPOS(state, items) {
     state.equipos = items
