@@ -11,7 +11,8 @@ const state = {
   ligas: [],
   torneos: [],
   equipos: [],
-  tiposdetorneo: []
+  tiposdetorneo: [],
+  diassemana: []
 }
 
 const getters = {
@@ -32,6 +33,9 @@ const getters = {
   },
   items: tiposdetorneo => {
     return tiposdetorneo.Nombre;
+  },
+  items: diassemana => {
+    return diassemana.Nombre;
   },
   items: equipos => {
     return equipos.Nombre;
@@ -56,6 +60,9 @@ const mutations = {
   },
   SET_TIPOSDETORNEO(state, items) {
     state.tiposdetorneo = items
+  },
+  SET_DIASSEMANA(state, items) {
+    state.diassemana = items
   },
   SET_EQUIPOS(state, items) {
     state.equipos = items
@@ -108,6 +115,14 @@ const actions = {
     try {
       const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarTiposDeTorneo?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
       return commit('SET_TIPOSDETORNEO', response.data);
+    } catch (error) {
+      return console.log(error);
+    }
+  },
+  async getDiasSemana({commit}) {
+    try {
+      const response = await axios.get(process.env.VUE_APP_API_URL + '/ConsultarDiasSemana?pnActivo=1', {}, { 'Access-Control-Allow-Origin': '*' });
+      return commit('SET_DIASSEMANA', response.data);
     } catch (error) {
       return console.log(error);
     }

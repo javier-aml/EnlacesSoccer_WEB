@@ -51,13 +51,15 @@
             {text: 'IdTorneo', value: 'IdTorneo', sortable: false, width: '150px', type: 'number', editable: false, ui: true, visible: true},
             {text: 'Torneo', value: 'Nombre', sortable: false, width: '200px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Tipo', value: 'IdTipoTorneo', sortable: true, width: '50px', type: 'combo', editable: true, ui: true, visible: true},
-            {text: 'Dias', value: 'IdDia', sortable: true, width: '50px', type: 'combo', editable: true, ui: true, visible: true},
-            {text: 'HorarioInicio', value: 'HorarioInicio', sortable: true, width: '50px', type: 'time', editable: true, ui: true, visible: true},
-            {text: 'HorarioFinal', value: 'HorarioFinal', sortable: true, width: '50px', type: 'time', editable: true, ui: true, visible: true},
+            {text: 'Dias', value: 'IdDiasSemana', sortable: true, width: '50px', type: 'combo', editable: true, ui: true, visible: true},
+            {text: 'HorarioInicio', value: 'HorarioInicio', sortable: true, width: '50px', type: 'text', editable: true, ui: true, visible: true},
+            {text: 'HorarioFinal', value: 'HorarioFin', sortable: true, width: '50px', type: 'text', editable: true, ui: true, visible: true},
             {text: 'Equipos', value: 'Equipos', sortable: false, width: '50px', type: 'link', editable: true, ui: true, visible: true},
             {text: 'Activo', value: 'Activo', sortable: false, width: '150px', type: 'check', editable: true, ui: true, visible: true},
           ],
-          gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1}],
+          gridCombo: [{name: 'IdLiga', data: 'getLigas', default: 1},
+                      {name: 'IdTipoTorneo', data: 'getTiposDeTorneo', default: 1},
+                      {name: 'IdDiasSemana', data: 'getDiasSemana', default: 1}],
           gridDataSel: 'BuscarTorneos',
           gridDataUi: 'GuardarTorneo',
           gridKey: ['IdLiga','IdTorneo']
@@ -80,10 +82,19 @@
         }
         return dataArr;
       },
+      diassemana() {
+        const data = this.$store.state.diassemana;
+        const dataArr = [];
+        for(let item of data){
+          dataArr.push(item);
+        }
+        return dataArr;
+      },
     },
     async mounted() {
       await this.$store.dispatch('getLigas');
       await this.$store.dispatch('getTiposDeTorneo');
+      await this.$store.dispatch('getDiasSemana');
     }
   }
 </script>
