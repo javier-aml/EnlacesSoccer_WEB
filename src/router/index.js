@@ -116,14 +116,6 @@ const routes = [
     },
   },
   {
-    path: '/pages/grid',
-    name: 'grid',
-    component: () => import('@/views/pages/Grid.vue'),
-    meta: {
-      layout: 'blank',
-    },
-  },
-  {
     path: '/pages/grid2',
     name: 'grid',
     component: () => import('@/views/pages/Grid2.vue'),
