@@ -62,7 +62,7 @@
                 :color="color"
                 ref="Correo"
                 v-model="Correo"
-                :rules="[() => !!Correo || valMsg]"
+                :rules="[() => !!Correo || valMsg, (v) => /.+@.+\..+/.test(v) || 'El correo no es válido']"
                 dense
                 label="Correo"
                 outlined
